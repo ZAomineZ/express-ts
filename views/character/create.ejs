@@ -1,0 +1,41 @@
+<%- include('../common/header.ejs')  %>
+
+<div class="container pt-5">
+    <h1>Création d'un personnage</h1>
+    <form action="#" method="POST" enctype="multipart/form-data" class="pt-2">
+        <div class="form-group">
+            <label for="name">Nom du personnage</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Nom de personnage..." required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" name="age" id="age" placeholder="Age du personnage..." required>
+        </div>
+        <div class="form-group">
+            <label for="size">Taille (cm)</label>
+            <input type="number" class="form-control" name="size" id="size" placeholder="Taille du personnage..." required>
+        </div>
+        <div class="form-group">
+            <label for="category">Anime</label>
+            <select class="custom-select" id="category" name="category">
+                <option selected value="">Choose...</option>
+                <% categories.forEach(function (category) { %>
+                    <option value="<%= category.slug %>">
+                        <%= category.name %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="content">Description</label>
+            <textarea name="content" id="content" class="form-control" cols="30" rows="10" required>Contenu sur ton personnage...</textarea>
+        </div>
+        <div class="custom-file mb-3">
+            <input type="file" id="image" name="image" class="custom-file-input">
+            <label for="image" class="custom-file-label">Votre image</label>
+        </div>
+        <button class="btn btn-primary" type="submit">Envoyer</button>
+    </form>
+</div>
+
+<%- include('../common/footer.ejs')  %>

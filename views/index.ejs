@@ -1,0 +1,12 @@
+<%- include ('common/header.ejs') %>
+
+<div class="container marketing pt-5">
+    <h1>Bienvenue sur mon site</h1>
+    <div class="row pt-5">
+        <% characters.forEach(function (character) { %>
+            <%- include('character/character.ejs', {character}); %>
+        <% }); %>
+    </div>
+</div>
+
+<%- include ('common/footer.ejs') %>

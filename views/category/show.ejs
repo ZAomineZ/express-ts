@@ -1,0 +1,19 @@
+<%- include('../common/header.ejs')  %>
+
+    <main role="main" class="container">
+        <img src="/assets/img/category/<%= category.image !== null ? category.image : 'one-piece.jpg' %>" alt="Image category '<%= category.name %>'" class="img-fluid">
+        <div class="jumbotron mt-5">
+            <h1><%= category.name %></h1>
+            <p class="lead pt-3"><%= category.content %></p>
+        </div>
+        <div id="characters">
+            <h2>Personnages</h2>
+            <div class="row pt-5">
+                <% characters.forEach(function(character) { %>
+                    <%- include('../character/character.ejs', {character}); %>
+                <% }) %>
+            </div>
+        </div>
+    </main>
+
+<%- include('../common/footer.ejs')  %>

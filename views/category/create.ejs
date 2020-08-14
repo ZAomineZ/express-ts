@@ -1,0 +1,24 @@
+<%- include('../common/header.ejs')  %>
+
+<div class="container pt-5">
+    <h1>Création catégorie</h1>
+    <form action="#" method="POST" class="pt-2" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Nom de la catégorie</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie...">
+        </div>
+        <div class="form-group">
+            <label for="content">Description de la catégorie</label>
+            <textarea name="content" id="content" cols="30" rows="10" class="form-control">
+                Description de la catégorie...
+            </textarea>
+        </div>
+        <div class="custom-file mb-3">
+            <input type="file" id="image" name="image" class="custom-file-input">
+            <label for="image" class="custom-file-label">Votre image</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+</div>
+
+<%- include('../common/footer.ejs')  %>

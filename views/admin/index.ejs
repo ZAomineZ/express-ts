@@ -1,0 +1,79 @@
+<%- include('./Common/header.ejs') %>
+
+<h1>Dashboard</h1>
+<div id="dashboard">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 pt-5">
+            <p class="h4">Characters</p>
+            <table class="table mt-3">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Content</th>
+                    <th scope="col">image</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% characters.forEach(function (character, key) { %>
+                    <tr>
+                        <th scope="row"><%= key + 1 %></th>
+                        <th scope="row"><%= character.characterName %></th>
+                        <th scope="row"><%= character.age %></th>
+                        <th scope="row"><%= character.size %></th>
+                        <th scope="row"><%= character.categoryName %></th>
+                        <th scope="row">
+                            <%= character.content.length >= 150 ? character.content.slice(0, 150) + '...' : character.content %>
+                        </th>
+                        <th scope="row">
+                            <img src="/assets/img/characters/<%= character.image %>" class="rounded img-64"
+                                 alt="Image character '<%= character.characterName %>'">
+                        </th>
+                        <th scope="row">
+                            <%= moment(character.created_at).format('MMMM Do YYYY, h:mm:ss') %>
+                        </th>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 col-md-6 pt-5">
+            <p class="h4">Categories</p>
+            <table class="table mt-3">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Slug</th>
+                    <th scope="col">Content</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% categories.forEach(function (category, key) { %>
+                    <tr>
+                        <th scope="row"><%= key + 1 %></th>
+                        <th scope="row"><%= category.name %></th>
+                        <th scope="row"><%= category.slug %></th>
+                        <th scope="row">
+                            <%= category.content.length >= 150 ? category.content.slice(0, 150) + '...' : category.content %>
+                        </th>
+                        <th scope="row">
+                            <img src="/assets/img/category/<%= category.image !== null ? category.image : 'one-piece.jpg' %>" class="rounded img-64"
+                                 alt="Image character '<%= category.name %>'">
+                        </th>
+                        <th scope="row"><%= moment(category.created_at).format('MMMM Do YYYY, h:mm:ss') %></th>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%- include('./Common/footer.ejs') %>

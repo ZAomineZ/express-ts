@@ -1,0 +1,26 @@
+<%- include('../common/header.ejs')  %>
+
+    <div class="container pt-5">
+        <h1>S'inscrire</h1>
+        <form action="#" method="POST" class="mt-3">
+            <div class="form-group">
+                <label for="username">Votre Pseudo</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Votre Pseudo...">
+            </div>
+            <div class="form-group">
+                <label for="email">Votre Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="Votre Email...">
+            </div>
+            <div class="form-group">
+                <label for="password">Votre Mot de passe</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe...">
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation">Votre confirmation du mot de passe</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Votre confirmation du mot de passe...">
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+    </div>
+
+<%- include('../common/footer.ejs')  %>
