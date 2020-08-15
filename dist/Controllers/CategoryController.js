@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CategoryController = void 0;
 const Category_1 = require("../middlewares/Category");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const CharacterModel_1 = require("../Models/CharacterModel");
 const moment_1 = __importDefault(require("moment"));
+const Pagination_1 = require("../Helpers/Pagination");
+const express_paginate_1 = __importDefault(require("express-paginate"));
 class CategoryController {
     /**
      * @param {Request} req
@@ -54,8 +57,16 @@ class CategoryController {
         return __awaiter(this, void 0, void 0, function* () {
             const params = req.params;
             let category = yield (new CategoryModel_1.CategoryModel()).findById(parseInt(params.id));
-            let characters = yield (new CharacterModel_1.CharacterModel()).findAll();
-            res.render('category/show', { category, characters, moment: moment_1.default });
+            let characters = yield (new CharacterModel_1.CharacterModel()).findAllByCategory(category.id);
+            const pagination = new Pagination_1.Pagination();
+            const paginateData = yield pagination.paginate(req, characters, CharacterModel_1.CharacterModel, category.id);
+            res.render('category/show', {
+                category,
+                characters: paginateData,
+                moment: moment_1.default,
+                pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+                currentPage: pagination.currentPage ? pagination.currentPage : 1
+            });
         });
     }
     /**

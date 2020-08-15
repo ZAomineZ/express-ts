@@ -4,6 +4,8 @@ import {CategoryModel} from "../Models/CategoryModel";
 import {CharacterModel} from "../Models/CharacterModel";
 import moment from "moment";
 import {Query} from "mysql";
+import {Pagination} from "../Helpers/Pagination";
+import paginate from "express-paginate";
 
 export class CategoryController {
 
@@ -47,8 +49,17 @@ export class CategoryController {
         const params = req.params;
 
         let category = await (new CategoryModel()).findById(parseInt(params.id));
-        let characters = await (new CharacterModel()).findAll();
-        res.render('category/show', {category, characters, moment})
+        let characters = await (new CharacterModel()).findAllByCategory(category.id);
+
+        const pagination = new Pagination()
+        const paginateData = await pagination.paginate(req, characters, CharacterModel, category.id)
+        res.render('category/show', {
+            category,
+            characters: paginateData,
+            moment,
+            pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+            currentPage: pagination.currentPage ? pagination.currentPage : 1
+        })
     }
 
     /**

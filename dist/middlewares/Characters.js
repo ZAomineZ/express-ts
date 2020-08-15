@@ -18,6 +18,7 @@ const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
 const CharacterModel_1 = require("../Models/CharacterModel");
 const express_paginate_1 = __importDefault(require("express-paginate"));
+const Pagination_1 = require("../Helpers/Pagination");
 class Characters {
     /**
      * @param {any} response
@@ -56,17 +57,14 @@ class Characters {
                         throw error;
                     if (!error) {
                         // @ts-ignore
-                        const currentPage = parseInt(request.query.page);
-                        const limit = 10;
-                        const pageCount = Math.ceil(results.length / limit);
-                        const offset = currentPage === 1 ? 0 : (limit * currentPage - limit);
-                        let characters = yield (new CharacterModel_1.CharacterModel()).findAllWithPaginate(limit, offset);
+                        const pagination = new Pagination_1.Pagination();
+                        const paginateData = yield pagination.paginate(request, results, CharacterModel_1.CharacterModel);
                         return response.render('index.ejs', {
-                            characters,
+                            characters: paginateData,
                             moment: moment_1.default,
                             message: request.flash('success'),
-                            pages: express_paginate_1.default.getArrayPages(request)(100, pageCount, currentPage),
-                            currentPage: currentPage ? currentPage : 1
+                            pages: express_paginate_1.default.getArrayPages(request)(100, pagination.pageCount, pagination.currentPage),
+                            currentPage: pagination.currentPage ? pagination.currentPage : 1
                         });
                     }
                 });

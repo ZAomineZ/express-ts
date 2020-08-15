@@ -31,6 +31,26 @@ class CharacterModel {
         });
     }
     /**
+     * @param {number} categoryID
+     *
+     * @return Promise<any>
+     */
+    findAllByCategory(categoryID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = 'SELECT * FROM characters WHERE category = ?';
+                DB_1.DB.connect().query(query, [categoryID], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
      * @return Promise<any>
      */
     findAllWithCategory() {
@@ -69,16 +89,23 @@ class CharacterModel {
         });
     }
     /**
-     * @param {Number} limit
-     * @param {Number} offset
+     * @param {number} limit
+     * @param {number} offset
+     * @param {number|null} category
      *
      *  @return Promise<any>
      */
-    findAllWithPaginate(limit, offset) {
+    findAllWithPaginate(limit, offset, category) {
         return __awaiter(this, void 0, void 0, function* () {
             let promise = new Promise((resolve, reject) => {
-                const query = 'SELECT * FROM characters LIMIT ? OFFSET ?';
-                DB_1.DB.connect().query(query, [limit, offset], function (error, results) {
+                let data = [limit, offset];
+                let query = 'SELECT * FROM characters';
+                if (category) {
+                    query += ' WHERE category = ?';
+                    data = [category, ...data];
+                }
+                query += ' LIMIT ? OFFSET ?';
+                DB_1.DB.connect().query(query, data, function (error, results) {
                     if (error)
                         throw error;
                     if (!error) {

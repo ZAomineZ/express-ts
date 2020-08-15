@@ -9,7 +9,7 @@
                     <img src="/assets/img/category/<%= category.image !== null ? category.image : 'one-piece.jpg' %>" alt="Image Catégorie" width="350" height="250">
                     <div class="card-body">
                         <p class="card-text">
-                            <%= category.content %>
+                            <%= category.content.length >= 150 ? category.content.slice(0, 150) + '...' : category.content %>
                         </p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">

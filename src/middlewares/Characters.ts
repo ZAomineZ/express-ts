@@ -6,6 +6,7 @@ import {ParamsDictionary} from "express-serve-static-core";
 import {CategoryModel} from "../Models/CategoryModel";
 import {CharacterModel} from "../Models/CharacterModel";
 import paginate from 'express-paginate'
+import {Pagination} from "../Helpers/Pagination";
 
 export class Characters {
     /**
@@ -41,18 +42,15 @@ export class Characters {
             if (error) throw error;
             if (!error) {
                 // @ts-ignore
-                const currentPage = parseInt(request.query.page)
-                const limit = 10
-                const pageCount = Math.ceil(results.length / limit)
-                const offset = currentPage === 1 ? 0 : (limit *  currentPage - limit)
+                const pagination = new Pagination()
+                const paginateData = await pagination.paginate(request, results, CharacterModel)
 
-                let characters = await (new CharacterModel()).findAllWithPaginate(limit, offset)
                 return response.render('index.ejs', {
-                    characters,
+                    characters: paginateData,
                     moment,
                     message: request.flash('success'),
-                    pages: paginate.getArrayPages(request)(100, pageCount, currentPage),
-                    currentPage: currentPage ? currentPage : 1
+                    pages: paginate.getArrayPages(request)(100, pagination.pageCount, pagination.currentPage),
+                    currentPage: pagination.currentPage ? pagination.currentPage : 1
                 })
             }
         })

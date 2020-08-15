@@ -19,6 +19,24 @@ export class CharacterModel {
     }
 
     /**
+     * @param {number} categoryID
+     *
+     * @return Promise<any>
+     */
+    async findAllByCategory(categoryID: number): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = 'SELECT * FROM characters WHERE category = ?';
+            DB.connect().query(query, [categoryID], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
      * @return Promise<any>
      */
     async findAllWithCategory(): Promise<any> {
@@ -53,15 +71,22 @@ export class CharacterModel {
     }
 
     /**
-     * @param {Number} limit
-     * @param {Number} offset
+     * @param {number} limit
+     * @param {number} offset
+     * @param {number|null} category
      *
      *  @return Promise<any>
      */
-    async findAllWithPaginate (limit: Number, offset: Number): Promise<any> {
+    async findAllWithPaginate (limit: number, offset: number, category?: number): Promise<any> {
         let promise = new Promise((resolve: any, reject: any) => {
-            const query = 'SELECT * FROM characters LIMIT ? OFFSET ?';
-            DB.connect().query(query, [limit, offset], function (error, results) {
+            let data = [limit, offset]
+            let query = 'SELECT * FROM characters';
+            if (category) {
+                query += ' WHERE category = ?'
+                data = [category, ...data]
+            }
+            query += ' LIMIT ? OFFSET ?'
+            DB.connect().query(query, data, function (error, results) {
                 if (error) throw error;
                 if (!error) {
                     resolve(results)
