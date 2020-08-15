@@ -9,11 +9,12 @@ export class Characters {
     /**
      * @param {any} response
      * @param {Response} res
+     * @param {Request} req
      * @param {any|null} reqFile
      *
      *  @return void
      */
-    static async create(response: any, res: Response, reqFile?: any): Promise<void> {
+    static async create(response: any, res: Response, req: Request, reqFile?: any): Promise<void> {
         let category = await (new CategoryModel()).findOrFail(response.category);
         if (!category) {
             return res.redirect('/character/create')
@@ -24,6 +25,7 @@ export class Characters {
         DB.connect().query('INSERT INTO characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ?', data, function (error, results, fields) {
             if (error) throw error;
             if (!error) {
+                req.flash('success', 'Your character has been created !')
                 res.redirect('/')
             }
         })
@@ -32,11 +34,11 @@ export class Characters {
     /**
      * @return Query
      */
-    static all(response: Response): Query {
+    static all(response: Response, request: Request): Query {
         return DB.connect().query('SELECT * FROM characters', function (error, results, fields) {
             if (error) throw error;
             if (!error) {
-                return response.render('index.ejs', {characters: results, moment})
+                return response.render('index.ejs', {characters: results, moment, message: request.flash('success')})
             }
         })
     }

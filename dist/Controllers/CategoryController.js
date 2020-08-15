@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategoryController = void 0;
 const Category_1 = require("../middlewares/Category");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const CharacterModel_1 = require("../Models/CharacterModel");
@@ -32,7 +31,7 @@ class CategoryController {
      * @param {Response} res
      */
     static create(req, res) {
-        res.render('category/create');
+        res.render('admin/categories/create');
     }
     /**
      * @param {Request} req

@@ -3,7 +3,6 @@ import {Request, Response} from "express";
 import {CategoryModel} from "../Models/CategoryModel";
 import {CharacterModel} from "../Models/CharacterModel";
 import moment from "moment";
-import {Characters} from "../middlewares/Characters";
 import {Query} from "mysql";
 
 export class CategoryController {
@@ -23,7 +22,7 @@ export class CategoryController {
      * @param {Response} res
      */
     static create (req: Request, res: Response): void {
-        res.render('category/create')
+        res.render('admin/categories/create')
     }
 
     /**

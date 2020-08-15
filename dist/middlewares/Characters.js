@@ -20,11 +20,12 @@ class Characters {
     /**
      * @param {any} response
      * @param {Response} res
+     * @param {Request} req
      * @param {any|null} reqFile
      *
      *  @return void
      */
-    static create(response, res, reqFile) {
+    static create(response, res, req, reqFile) {
         return __awaiter(this, void 0, void 0, function* () {
             let category = yield (new CategoryModel_1.CategoryModel()).findOrFail(response.category);
             if (!category) {
@@ -36,6 +37,7 @@ class Characters {
                 if (error)
                     throw error;
                 if (!error) {
+                    req.flash('success', 'Your character has been created !');
                     res.redirect('/');
                 }
             });
@@ -44,12 +46,12 @@ class Characters {
     /**
      * @return Query
      */
-    static all(response) {
+    static all(response, request) {
         return DB_1.DB.connect().query('SELECT * FROM characters', function (error, results, fields) {
             if (error)
                 throw error;
             if (!error) {
-                return response.render('index.ejs', { characters: results, moment: moment_1.default });
+                return response.render('index.ejs', { characters: results, moment: moment_1.default, message: request.flash('success') });
             }
         });
     }

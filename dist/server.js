@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
+const connect_flash_1 = __importDefault(require("connect-flash"));
 // Modules Middlewares and Controllers
 const FileStorage_1 = require("./Storage/FileStorage");
 const CharacterController_1 = require("./Controllers/CharacterController");
@@ -28,16 +29,20 @@ class Server {
         // Middlewares
         app.use(body_parser_1.default.urlencoded({ extended: true }));
         app.use(body_parser_1.default.json());
-        app.use(express_session_1.default({ secret: 'auth-user', saveUninitialized: true, resave: true }));
+        app.use(express_session_1.default({
+            secret: 'session-api',
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: false }
+        }));
+        app.use(connect_flash_1.default());
         // Middlewares Request
         // GET ROUTES
         // ROUTES CHARACTERS
         app.get('/', CharacterController_1.CharacterController.index);
-        app.get('/character/create', CharacterController_1.CharacterController.create);
         app.get('/character/show/:id', CharacterController_1.CharacterController.show);
         // ROUTES CATEGORIES
         app.get('/category', CategoryController_1.CategoryController.index);
-        app.get('/category/create', CategoryController_1.CategoryController.create);
         app.get('/category/show/:id', CategoryController_1.CategoryController.show);
         // ROUTES ADMIN
         app.get('/admin/register', UserController_1.UserController.register);
@@ -45,16 +50,19 @@ class Server {
         app.get('/admin', UserController_1.UserController.admin);
         app.get('/admin/characters', UserController_1.UserController.listingCharacters);
         app.get('/admin/categories', UserController_1.UserController.listingCategories);
+        app.get('/admin/character/create', CharacterController_1.CharacterController.create);
+        app.get('/admin/category/create', CategoryController_1.CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage_1.FileStorage.upload('characters/');
-        app.post('/character/create', upload.single('image'), CharacterController_1.CharacterController.createPOST);
+        app.post('/admin/character/create', upload.single('image'), CharacterController_1.CharacterController.createPOST);
         app.post('/admin/character/update/:id', CharacterController_1.CharacterController.update);
+        app.post('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage_1.FileStorage.upload('category/');
-        app.post('/category/create', uploadCategories.single('image'), CategoryController_1.CategoryController.createPOST);
+        app.post('/admin/category/create', uploadCategories.single('image'), CategoryController_1.CategoryController.createPOST);
         app.post('/admin/category/update/:id', uploadCategories.single('image'), CategoryController_1.CategoryController.update);
         // ROUTES ADMIN
         app.post('/admin/register', UserController_1.UserController.registerPOST);

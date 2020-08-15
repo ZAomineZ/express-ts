@@ -20,7 +20,7 @@ class CharacterController {
      * @return void
      */
     static index(req, res) {
-        Characters_1.Characters.all(res);
+        Characters_1.Characters.all(res, req);
     }
     /**
      * @param {Request} req
@@ -31,7 +31,7 @@ class CharacterController {
     static create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const categories = yield (new CategoryModel_1.CategoryModel()).fetchAll();
-            res.render('character/create', { categories });
+            res.render('admin/characters/create', { categories });
         });
     }
     /**
@@ -43,7 +43,7 @@ class CharacterController {
     static createPOST(req, res) {
         const response = req.body;
         const reqFile = req.file;
-        return Characters_1.Characters.create(response, res, reqFile);
+        return Characters_1.Characters.create(response, res, req, reqFile);
     }
     /**
      * @param {Request} req

@@ -12,7 +12,7 @@ export class CharacterController {
      * @return void
      */
     static index(req: Request, res: Response): void {
-        Characters.all(res);
+        Characters.all(res, req);
     }
 
     /**
@@ -23,7 +23,7 @@ export class CharacterController {
      */
     static async create(req: Request, res: Response): Promise<void> {
         const categories = await (new CategoryModel()).fetchAll();
-        res.render('character/create', {categories})
+        res.render('admin/characters/create', {categories})
     }
 
     /**
@@ -35,7 +35,7 @@ export class CharacterController {
     static createPOST(req: Request, res: Response): Promise<void> {
         const response = req.body;
         const reqFile = req.file;
-        return Characters.create(response, res, reqFile)
+        return Characters.create(response, res, req, reqFile)
     }
 
     /**
@@ -70,4 +70,6 @@ export class CharacterController {
         const params = req.params;
         return Characters.update(response, params, res)
     }
+
+    static delete (req: Request, res: Response)
 }

@@ -3,6 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import path from "path";
 import session from 'express-session'
+import flash from 'connect-flash'
 
 // Modules Middlewares and Controllers
 import {FileStorage} from "./Storage/FileStorage";
@@ -31,19 +32,23 @@ export default class Server {
         // Middlewares
         app.use(bodyParser.urlencoded({extended: true}));
         app.use(bodyParser.json());
-        app.use(session({secret: 'auth-user', saveUninitialized: true, resave: true}))
+        app.use(session({
+            secret: 'session-api',
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: false }
+        }))
+        app.use(flash())
 
         // Middlewares Request
 
         // GET ROUTES
         // ROUTES CHARACTERS
         app.get('/', CharacterController.index);
-        app.get('/character/create', CharacterController.create);
         app.get('/character/show/:id', CharacterController.show);
 
         // ROUTES CATEGORIES
         app.get('/category', CategoryController.index);
-        app.get('/category/create', CategoryController.create);
         app.get('/category/show/:id', CategoryController.show);
 
         // ROUTES ADMIN
@@ -52,18 +57,21 @@ export default class Server {
         app.get('/admin', UserController.admin)
         app.get('/admin/characters', UserController.listingCharacters)
         app.get('/admin/categories', UserController.listingCategories);
+        app.get('/admin/character/create', CharacterController.create);
+        app.get('/admin/category/create', CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController.edit)
 
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage.upload('characters/')
-        app.post('/character/create', upload.single('image'), CharacterController.createPOST);
+        app.post('/admin/character/create', upload.single('image'), CharacterController.createPOST);
         app.post('/admin/character/update/:id', CharacterController.update);
+        app.post('/admin/character/delete/:id', CharacterController.delete);
 
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage.upload('category/')
-        app.post('/category/create', uploadCategories.single('image'), CategoryController.createPOST);
+        app.post('/admin/category/create', uploadCategories.single('image'), CategoryController.createPOST);
         app.post('/admin/category/update/:id', uploadCategories.single('image'), CategoryController.update)
 
         // ROUTES ADMIN
