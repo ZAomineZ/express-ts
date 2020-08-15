@@ -4,6 +4,7 @@ import {Query} from "mysql";
 import moment from 'moment'
 import {ParamsDictionary} from "express-serve-static-core";
 import {CategoryModel} from "../Models/CategoryModel";
+import {CharacterModel} from "../Models/CharacterModel";
 
 export class Characters {
     /**
@@ -95,6 +96,28 @@ export class Characters {
             if (error) throw error;
             if (!error) {
                 return res.redirect('/')
+            }
+        })
+    }
+
+    /**
+     * @param {Response} response
+     * @param {Request} request
+     *
+     * @return Promise<Query>
+     */
+    static async delete(response: Response, request: Request): Promise<Query> {
+        const id = parseInt(request.params.id)
+        let character = await (new CharacterModel()).findById(id)
+        if (!character) {
+            response.redirect('/admin/characters')
+        }
+
+        return DB.connect().query('DELETE FROM characters WHERE id = ?', [id], function (error) {
+            if (error) throw error
+            if (!error) {
+                request.flash('success', 'You are deleted your character !')
+                response.redirect('/admin/characters')
             }
         })
     }

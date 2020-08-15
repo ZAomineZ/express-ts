@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
+const CharacterModel_1 = require("../Models/CharacterModel");
 class Characters {
     /**
      * @param {any} response
@@ -114,6 +114,29 @@ class Characters {
                     throw error;
                 if (!error) {
                     return res.redirect('/');
+                }
+            });
+        });
+    }
+    /**
+     * @param {Response} response
+     * @param {Request} request
+     *
+     * @return Promise<Query>
+     */
+    static delete(response, request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = parseInt(request.params.id);
+            let character = yield (new CharacterModel_1.CharacterModel()).findById(id);
+            if (!character) {
+                response.redirect('/admin/characters');
+            }
+            return DB_1.DB.connect().query('DELETE FROM characters WHERE id = ?', [id], function (error) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    request.flash('success', 'You are deleted your character !');
+                    response.redirect('/admin/characters');
                 }
             });
         });

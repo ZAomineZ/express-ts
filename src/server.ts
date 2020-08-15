@@ -61,13 +61,13 @@ export default class Server {
         app.get('/admin/category/create', CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController.edit)
+        app.get('/admin/character/delete/:id', CharacterController.delete);
 
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage.upload('characters/')
         app.post('/admin/character/create', upload.single('image'), CharacterController.createPOST);
         app.post('/admin/character/update/:id', CharacterController.update);
-        app.post('/admin/character/delete/:id', CharacterController.delete);
 
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage.upload('category/')

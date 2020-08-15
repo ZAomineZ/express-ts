@@ -66,7 +66,7 @@ export class UserController {
      */
     static async listingCharacters (req: Request, res: Response): Promise<void> {
         const characters = await (new CharacterModel()).findAllWithCategory()
-        res.render('admin/characters/index', {characters, moment})
+        res.render('admin/characters/index', {characters, moment, message: req.flash('success')})
     }
 
     /**

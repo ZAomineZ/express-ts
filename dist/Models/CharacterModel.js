@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DB_1 = require("../DB");
 class CharacterModel {
     /**
-     * @return Promise<void>
+     * @return Promise<any>
      */
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +30,7 @@ class CharacterModel {
         });
     }
     /**
-     * @return Promise<void>
+     * @return Promise<any>
      */
     findAllWithCategory() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,6 +45,26 @@ class CharacterModel {
                 });
             });
             return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {Number} id
+     *
+     * @return Promise<any>
+     */
+    findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = 'SELECT * FROM characters WHERE id = ?';
+                DB_1.DB.connect().query(query, [id], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result[0]);
         });
     }
 }

@@ -71,5 +71,11 @@ export class CharacterController {
         return Characters.update(response, params, res)
     }
 
-    static delete (req: Request, res: Response)
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static delete (req: Request, res: Response) {
+        return Characters.delete(res, req)
+    }
 }

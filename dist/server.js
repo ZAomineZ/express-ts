@@ -54,12 +54,12 @@ class Server {
         app.get('/admin/category/create', CategoryController_1.CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
+        app.get('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage_1.FileStorage.upload('characters/');
         app.post('/admin/character/create', upload.single('image'), CharacterController_1.CharacterController.createPOST);
         app.post('/admin/character/update/:id', CharacterController_1.CharacterController.update);
-        app.post('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage_1.FileStorage.upload('category/');
         app.post('/admin/category/create', uploadCategories.single('image'), CategoryController_1.CategoryController.createPOST);
