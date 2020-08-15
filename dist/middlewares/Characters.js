@@ -12,10 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
 const CharacterModel_1 = require("../Models/CharacterModel");
+const express_paginate_1 = __importDefault(require("express-paginate"));
 class Characters {
     /**
      * @param {any} response
@@ -44,15 +46,31 @@ class Characters {
         });
     }
     /**
-     * @return Query
+     * @return Promise<Query>
      */
     static all(response, request) {
-        return DB_1.DB.connect().query('SELECT * FROM characters', function (error, results, fields) {
-            if (error)
-                throw error;
-            if (!error) {
-                return response.render('index.ejs', { characters: results, moment: moment_1.default, message: request.flash('success') });
-            }
+        return __awaiter(this, void 0, void 0, function* () {
+            return DB_1.DB.connect().query('SELECT * FROM characters', function (error, results, fields) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        // @ts-ignore
+                        const currentPage = parseInt(request.query.page);
+                        const limit = 10;
+                        const pageCount = Math.ceil(results.length / limit);
+                        const offset = currentPage === 1 ? 0 : (limit * currentPage - limit);
+                        let characters = yield (new CharacterModel_1.CharacterModel()).findAllWithPaginate(limit, offset);
+                        return response.render('index.ejs', {
+                            characters,
+                            moment: moment_1.default,
+                            message: request.flash('success'),
+                            pages: express_paginate_1.default.getArrayPages(request)(100, pageCount, currentPage),
+                            currentPage: currentPage ? currentPage : 1
+                        });
+                    }
+                });
+            });
         });
     }
     /**

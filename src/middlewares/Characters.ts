@@ -5,6 +5,7 @@ import moment from 'moment'
 import {ParamsDictionary} from "express-serve-static-core";
 import {CategoryModel} from "../Models/CategoryModel";
 import {CharacterModel} from "../Models/CharacterModel";
+import paginate from 'express-paginate'
 
 export class Characters {
     /**
@@ -33,13 +34,26 @@ export class Characters {
     }
 
     /**
-     * @return Query
+     * @return Promise<Query>
      */
-    static all(response: Response, request: Request): Query {
-        return DB.connect().query('SELECT * FROM characters', function (error, results, fields) {
+    static async all(response: Response, request: Request): Promise<Query> {
+        return DB.connect().query('SELECT * FROM characters', async function (error, results, fields) {
             if (error) throw error;
             if (!error) {
-                return response.render('index.ejs', {characters: results, moment, message: request.flash('success')})
+                // @ts-ignore
+                const currentPage = parseInt(request.query.page)
+                const limit = 10
+                const pageCount = Math.ceil(results.length / limit)
+                const offset = currentPage === 1 ? 0 : (limit *  currentPage - limit)
+
+                let characters = await (new CharacterModel()).findAllWithPaginate(limit, offset)
+                return response.render('index.ejs', {
+                    characters,
+                    moment,
+                    message: request.flash('success'),
+                    pages: paginate.getArrayPages(request)(100, pageCount, currentPage),
+                    currentPage: currentPage ? currentPage : 1
+                })
             }
         })
     }

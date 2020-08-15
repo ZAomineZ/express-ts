@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import path from "path";
 import session from 'express-session'
 import flash from 'connect-flash'
+import paginate from 'express-paginate'
 
 // Modules Middlewares and Controllers
 import {FileStorage} from "./Storage/FileStorage";
@@ -39,6 +40,7 @@ export default class Server {
             cookie: { secure: false }
         }))
         app.use(flash())
+        app.use(paginate.middleware(10, 50));
 
         // Middlewares Request
 

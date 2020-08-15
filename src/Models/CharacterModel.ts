@@ -51,4 +51,23 @@ export class CharacterModel {
         });
         return promise.then((result: any) => result[0])
     }
+
+    /**
+     * @param {Number} limit
+     * @param {Number} offset
+     *
+     *  @return Promise<any>
+     */
+    async findAllWithPaginate (limit: Number, offset: Number): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = 'SELECT * FROM characters LIMIT ? OFFSET ?';
+            DB.connect().query(query, [limit, offset], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
 }

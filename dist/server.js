@@ -8,6 +8,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
+const express_paginate_1 = __importDefault(require("express-paginate"));
 // Modules Middlewares and Controllers
 const FileStorage_1 = require("./Storage/FileStorage");
 const CharacterController_1 = require("./Controllers/CharacterController");
@@ -36,6 +37,7 @@ class Server {
             cookie: { secure: false }
         }));
         app.use(connect_flash_1.default());
+        app.use(express_paginate_1.default.middleware(10, 50));
         // Middlewares Request
         // GET ROUTES
         // ROUTES CHARACTERS
