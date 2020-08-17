@@ -121,5 +121,13 @@ class UserController {
             });
         });
     }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static listingUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
 }
 exports.UserController = UserController;

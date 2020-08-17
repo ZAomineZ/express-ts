@@ -16,6 +16,7 @@ const CharacterController_1 = require("./Controllers/CharacterController");
 const CategoryController_1 = require("./Controllers/CategoryController");
 const UserController_1 = require("./Controllers/UserController");
 const Auth_1 = require("./middlewares/Auth");
+const CommentController_1 = require("./Controllers/CommentController");
 class Server {
     constructor(port) {
         this.port = 8080;
@@ -62,6 +63,7 @@ class Server {
         app.get('/admin', UserController_1.UserController.admin);
         app.get('/admin/characters', UserController_1.UserController.listingCharacters);
         app.get('/admin/categories', UserController_1.UserController.listingCategories);
+        app.get('/admin/users', UserController_1.UserController.listingUsers);
         app.get('/admin/character/create', CharacterController_1.CharacterController.create);
         app.get('/admin/category/create', CategoryController_1.CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
@@ -76,6 +78,8 @@ class Server {
         let uploadCategories = FileStorage_1.FileStorage.upload('category/');
         app.post('/admin/category/create', uploadCategories.single('image'), CategoryController_1.CategoryController.createPOST);
         app.post('/admin/category/update/:id', uploadCategories.single('image'), CategoryController_1.CategoryController.update);
+        // ROUTES COMMENTS
+        app.post('/character/show/:id', CommentController_1.CommentController.comment);
         // ROUTES ADMIN
         app.post('/admin/register', UserController_1.UserController.registerPOST);
         app.post('/admin/login', UserController_1.UserController.loginPOST);

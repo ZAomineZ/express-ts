@@ -2,3 +2,41 @@
   margin-bottom: 1.5rem;
   text-align: center;
 }
+
+.comment {
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+.comment .comment-header {
+  margin: 0 0 .8em 40px;
+}
+
+#commentary {
+  padding-top: 3rem;
+}
+
+#commentary .comment .comment-header .avatar {
+  position: absolute;
+  width: 35px;
+  margin-left: -40px;
+}
+
+#commentary .comment .comment-header h1 {
+  display: inline;
+  font-size: 1.2rem;
+  color: #444;
+}
+
+#commentary .comment p {
+  margin-bottom: 1em;
+}
+
+#commentary h2 {
+  text-align: center;
+}
+
+#commentary .form-comment {
+  max-width: 900px;
+  margin: auto;
+}

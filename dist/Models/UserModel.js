@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserModel = void 0;
 const DB_1 = require("../DB");
 class UserModel {
     /**

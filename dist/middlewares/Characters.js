@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
 const CharacterModel_1 = require("../Models/CharacterModel");
 const express_paginate_1 = __importDefault(require("express-paginate"));
 const Pagination_1 = require("../Helpers/Pagination");
+const CommentModel_1 = require("../Models/CommentModel");
 class Characters {
     /**
      * @param {any} response
@@ -84,8 +86,10 @@ class Characters {
                     if (error)
                         throw error;
                     if (!error) {
-                        let Category = yield (new CategoryModel_1.CategoryModel()).findById(results[0].category);
-                        return response.render('character/show', { character: results[0], moment: moment_1.default, Category });
+                        const character = results[0];
+                        let Category = yield (new CategoryModel_1.CategoryModel()).findById(character.category);
+                        let Comments = yield (new CommentModel_1.CommentModel()).findByCharacter(character.id);
+                        return response.render('character/show', { character, Comments, moment: moment_1.default, Category });
                     }
                 });
             });

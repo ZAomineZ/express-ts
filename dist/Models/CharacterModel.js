@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CharacterModel = void 0;
 const DB_1 = require("../DB");
 class CharacterModel {
     /**

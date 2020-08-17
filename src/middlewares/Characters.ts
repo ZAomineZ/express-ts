@@ -7,6 +7,7 @@ import {CategoryModel} from "../Models/CategoryModel";
 import {CharacterModel} from "../Models/CharacterModel";
 import paginate from 'express-paginate'
 import {Pagination} from "../Helpers/Pagination";
+import {CommentModel} from "../Models/CommentModel";
 
 export class Characters {
     /**
@@ -67,8 +68,11 @@ export class Characters {
         return DB.connect().query('SELECT * FROM characters WHERE id = ?', [id], async function (error, results, fields) {
             if (error) throw error;
             if (!error) {
-                let Category = await (new CategoryModel()).findById(results[0].category);
-                return response.render('character/show', {character: results[0], moment, Category})
+                const character = results[0]
+
+                let Category = await (new CategoryModel()).findById(character.category);
+                let Comments = await (new CommentModel()).findByCharacter(character.id)
+                return response.render('character/show', {character, Comments, moment, Category})
             }
         })
     }

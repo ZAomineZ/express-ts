@@ -13,6 +13,7 @@ import {CharacterController} from "./Controllers/CharacterController";
 import {CategoryController} from "./Controllers/CategoryController";
 import {UserController} from "./Controllers/UserController";
 import {Auth} from "./middlewares/Auth";
+import {CommentController} from "./Controllers/CommentController";
 
 export default class Server {
     readonly port: number = 8080;
@@ -71,6 +72,8 @@ export default class Server {
         app.get('/admin', UserController.admin)
         app.get('/admin/characters', UserController.listingCharacters)
         app.get('/admin/categories', UserController.listingCategories);
+        app.get('/admin/users', UserController.listingUsers)
+
         app.get('/admin/character/create', CharacterController.create);
         app.get('/admin/category/create', CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController.edit);
@@ -87,6 +90,9 @@ export default class Server {
         let uploadCategories = FileStorage.upload('category/')
         app.post('/admin/category/create', uploadCategories.single('image'), CategoryController.createPOST);
         app.post('/admin/category/update/:id', uploadCategories.single('image'), CategoryController.update)
+
+        // ROUTES COMMENTS
+        app.post('/character/show/:id', CommentController.comment)
 
         // ROUTES ADMIN
         app.post('/admin/register', UserController.registerPOST)

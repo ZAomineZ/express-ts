@@ -1,31 +1,45 @@
 <%- include ('../common/header.ejs') %>
 
-    <div class="container pt-5">
-        <h1>Personnage : <%= character.name %></h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div id="article" class="pt-4">
-                    <p><%= character.content %></p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card" style="width: 250px">
-                    <img src="/assets/img/characters/<%= character.image %>" alt="Image Personnage" class="card-img-top"/>
-                    <div class="card-body">
-                        <p>Age : <%= character.age %> ans</p>
-                        <p>Taille (cm) : <%= character.size %> cm</p>
-                        <p>Manga : <%= character.category === null ? 'Aucune Catégorie' : Category.name %></p>
-                        <p>Date de création : <%= moment(character.created_at).format('MMMM Do YYYY') %></p>
-                        <p class="pt-2">
-                            <a href="/character/update/<%= character.id %>" class="btn btn-success">Modifier</a>
-                        </p>
-                    </div>
-                </div>
+<div class="container pt-5">
+    <h1>Personnage : <%= character.name %></h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="article" class="pt-4">
+                <p><%= character.content %></p>
             </div>
         </div>
-        <div id="commentary">
-            <h2>Les Commentaires</h2>
+        <div class="col-md-6">
+            <div class="card" style="width: 250px">
+                <img src="/assets/img/characters/<%= character.image %>" alt="Image Personnage" class="card-img-top"/>
+                <div class="card-body">
+                    <p>Age : <%= character.age %> ans</p>
+                    <p>Taille (cm) : <%= character.size %> cm</p>
+                    <p>Manga : <%= character.category === null ? 'Aucune Catégorie' : Category.name %></p>
+                    <p>Date de création : <%= moment(character.created_at).format('MMMM Do YYYY') %></p>
+                    <p class="pt-2">
+                        <a href="/character/update/<%= character.id %>" class="btn btn-success">Modifier</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
+    <div id="commentary">
+        <h2>Commentaires</h2>
+        <!-- COMPONENT COMMENTS -->
+        <% Comments.forEach(function (comment) { %>
+            <%- include('./comment.ejs', {comment}); %>
+        <% }); %>
+
+        <!-- COMPONENT COMMENT FORM -->
+        <h2>Votre commentaire</h2>
+        <form action="#" id="form-comment" method="POST">
+            <div class="form-group">
+                <label for="content">*Ce que voulez partager sur ce personnage</label>
+                <textarea name="content" id="content" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-primary">Envoyer</button>
+        </form>
+    </div>
+</div>
 
 <%- include ('../common/footer.ejs') %>

@@ -111,4 +111,12 @@ export class UserController {
             currentPage: pagination.currentPage ? pagination.currentPage : 1
         })
     }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static async listingUsers(req: Request, res: Response) {
+        
+    }
 }
