@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserController = void 0;
 const CharacterModel_1 = require("../Models/CharacterModel");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const moment_1 = __importDefault(require("moment"));
 const User_1 = require("../middlewares/User");
+const Pagination_1 = require("../Helpers/Pagination");
+const express_paginate_1 = __importDefault(require("express-paginate"));
 class UserController {
     /**
      * @param {Request} req
@@ -30,6 +33,19 @@ class UserController {
      */
     static register(req, res) {
         res.render('admin/register');
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static logout(req, res) {
+        if (req.cookies.user_sid && req.session && req.session.user) {
+            res.clearCookie('user_sid');
+            res.redirect('/');
+        }
+        else {
+            res.redirect('/login');
+        }
     }
     /**
      * @param {Request} req
@@ -58,10 +74,10 @@ class UserController {
      */
     static admin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (req.session && !req.session.username) {
-                res.redirect('/');
+            if (req.session && !req.session.user) {
+                res.redirect('/admin/login');
             }
-            const characters = yield (new CharacterModel_1.CharacterModel()).findAllWithCategory();
+            const characters = yield (new CharacterModel_1.CharacterModel()).findAllWithCategory({ limit: 10, orderBy: 'DESC' });
             const categories = yield (new CategoryModel_1.CategoryModel()).fetchAll();
             res.render('admin/index', { characters, categories, moment: moment_1.default });
         });
@@ -74,8 +90,16 @@ class UserController {
      */
     static listingCharacters(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const characters = yield (new CharacterModel_1.CharacterModel()).findAllWithCategory();
-            res.render('admin/characters/index', { characters, moment: moment_1.default, message: req.flash('success') });
+            const results = yield (new CharacterModel_1.CharacterModel()).findAllWithCategory();
+            const pagination = new Pagination_1.Pagination();
+            const paginateData = yield pagination.paginate(req, results, CharacterModel_1.CharacterModel);
+            res.render('admin/characters/index', {
+                characters: paginateData,
+                moment: moment_1.default,
+                message: req.flash('success'),
+                pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+                currentPage: pagination.currentPage ? pagination.currentPage : 1
+            });
         });
     }
     /**
@@ -86,8 +110,15 @@ class UserController {
      */
     static listingCategories(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const categories = yield (new CategoryModel_1.CategoryModel()).fetchAll();
-            res.render('admin/categories/index', { categories, moment: moment_1.default });
+            const results = yield (new CategoryModel_1.CategoryModel()).fetchAll();
+            const pagination = new Pagination_1.Pagination();
+            const paginateData = yield pagination.paginate(req, results, CharacterModel_1.CharacterModel);
+            res.render('admin/categories/index', {
+                categories: paginateData,
+                moment: moment_1.default,
+                pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+                currentPage: pagination.currentPage ? pagination.currentPage : 1
+            });
         });
     }
 }

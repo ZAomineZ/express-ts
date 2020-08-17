@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");

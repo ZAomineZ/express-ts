@@ -37,12 +37,19 @@ export class CharacterModel {
     }
 
     /**
+     * @param {Object} object
+     *
      * @return Promise<any>
      */
-    async findAllWithCategory(): Promise<any> {
+    async findAllWithCategory(object?: {limit: Number, orderBy: String}): Promise<any> {
         let promise = new Promise((resolve: any, reject: any) => {
-            const query = 'SELECT characters.id, characters.name as characterName, category.name as categoryName, characters.content, characters.age, characters.size, characters.image, characters.created_at FROM characters LEFT JOIN category ON characters.category = category.id';
-            DB.connect().query(query, function (error, results) {
+            let data = []
+            let query = 'SELECT characters.id, characters.name as characterName, category.name as categoryName, characters.content, characters.age, characters.size, characters.image, characters.created_at FROM characters LEFT JOIN category ON characters.category = category.id';
+            if (object) {
+                query += ' ORDER BY characters.id ' + object?.orderBy + ' LIMIT ?'
+                data.push(object?.limit)
+            }
+            DB.connect().query(query, data, function (error, results) {
                 if (error) throw error;
                 if (!error) {
                     resolve(results)

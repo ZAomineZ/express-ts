@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
 const DB_1 = require("../DB");
 const Password_1 = require("../Helpers/Password");
 const UserModel_1 = require("../Models/UserModel");
@@ -60,9 +59,7 @@ class User {
             }
             // Set Session User
             jsonwebtoken_1.default.sign({ username: user.username }, this.accessTokenSecret);
-            sessionReq.username = user.username;
-            sessionReq.email = user.email;
-            sessionReq.role = user.role;
+            sessionReq.user = user;
             res.end();
             return res.redirect('/admin');
         });

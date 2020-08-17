@@ -3,6 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import path from "path";
 import session from 'express-session'
+import cookieParser from 'cookie-parser'
 import flash from 'connect-flash'
 import paginate from 'express-paginate'
 
@@ -11,6 +12,7 @@ import {FileStorage} from "./Storage/FileStorage";
 import {CharacterController} from "./Controllers/CharacterController";
 import {CategoryController} from "./Controllers/CategoryController";
 import {UserController} from "./Controllers/UserController";
+import {Auth} from "./middlewares/Auth";
 
 export default class Server {
     readonly port: number = 8080;
@@ -34,13 +36,21 @@ export default class Server {
         app.use(bodyParser.urlencoded({extended: true}));
         app.use(bodyParser.json());
         app.use(session({
-            secret: 'session-api',
+            secret: 'somerandonstuffs',
+            key: 'user_sid',
             resave: false,
             saveUninitialized: true,
-            cookie: { secure: false }
+            cookie: {
+                // @ts-ignore
+                expires: 600000
+            }
         }))
         app.use(flash())
         app.use(paginate.middleware(10, 50));
+        app.use(cookieParser())
+
+        // Middlewares Cookies and Sessions
+        app.use(Auth.checkSessionAuth)
 
         // Middlewares Request
 
@@ -54,8 +64,10 @@ export default class Server {
         app.get('/category/show/:id', CategoryController.show);
 
         // ROUTES ADMIN
-        app.get('/admin/register', UserController.register);
-        app.get('/admin/login', UserController.login)
+        app.get('/admin/register', Auth.checkConnected, UserController.register);
+        app.get('/admin/login', Auth.checkConnected, UserController.login)
+        app.get('/admin/logout', UserController.logout)
+
         app.get('/admin', UserController.admin)
         app.get('/admin/characters', UserController.listingCharacters)
         app.get('/admin/categories', UserController.listingCategories);

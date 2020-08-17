@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CharacterController = void 0;
 const Characters_1 = require("../middlewares/Characters");
 const CategoryModel_1 = require("../Models/CategoryModel");
 class CharacterController {

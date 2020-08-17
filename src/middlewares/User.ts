@@ -51,9 +51,7 @@ export class User {
 
         // Set Session User
         jsonwebtoken.sign({username: user.username}, this.accessTokenSecret)
-        sessionReq.username = user.username
-        sessionReq.email = user.email
-        sessionReq.role = user.role
+        sessionReq.user = user
         res.end()
         return res.redirect('/admin')
     }

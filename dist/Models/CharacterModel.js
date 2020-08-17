@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CharacterModel = void 0;
 const DB_1 = require("../DB");
 class CharacterModel {
     /**
@@ -51,13 +50,20 @@ class CharacterModel {
         });
     }
     /**
+     * @param {Object} object
+     *
      * @return Promise<any>
      */
-    findAllWithCategory() {
+    findAllWithCategory(object) {
         return __awaiter(this, void 0, void 0, function* () {
             let promise = new Promise((resolve, reject) => {
-                const query = 'SELECT characters.id, characters.name as characterName, category.name as categoryName, characters.content, characters.age, characters.size, characters.image, characters.created_at FROM characters LEFT JOIN category ON characters.category = category.id';
-                DB_1.DB.connect().query(query, function (error, results) {
+                let data = [];
+                let query = 'SELECT characters.id, characters.name as characterName, category.name as categoryName, characters.content, characters.age, characters.size, characters.image, characters.created_at FROM characters LEFT JOIN category ON characters.category = category.id';
+                if (object) {
+                    query += ' ORDER BY characters.id ' + (object === null || object === void 0 ? void 0 : object.orderBy) + ' LIMIT ?';
+                    data.push(object === null || object === void 0 ? void 0 : object.limit);
+                }
+                DB_1.DB.connect().query(query, data, function (error, results) {
                     if (error)
                         throw error;
                     if (!error) {

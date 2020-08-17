@@ -27,16 +27,15 @@ export class Pagination {
         this._pageCount = Math.ceil(results.length / this.limit)
         this.offset = this._currentPage === 1 ? 0 : (this.limit * this._currentPage - this.limit)
 
-        return this.paginationData(classModel, category)
+        return this.paginationData(results)
     }
 
     /**
-     * @param {any} classModel
-     * @param {number|null} category
+     * @param {any} results
      * @private
      */
-    private async paginationData(classModel: any, category?: number) {
-        return await (new classModel()).findAllWithPaginate(this.limit, this.offset, category)
+    private paginationData(results: any) {
+        return results.slice(this.offset, this.offset + this.limit)
     }
 
 }

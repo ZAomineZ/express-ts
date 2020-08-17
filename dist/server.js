@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
 const express_paginate_1 = __importDefault(require("express-paginate"));
 // Modules Middlewares and Controllers
@@ -14,6 +15,7 @@ const FileStorage_1 = require("./Storage/FileStorage");
 const CharacterController_1 = require("./Controllers/CharacterController");
 const CategoryController_1 = require("./Controllers/CategoryController");
 const UserController_1 = require("./Controllers/UserController");
+const Auth_1 = require("./middlewares/Auth");
 class Server {
     constructor(port) {
         this.port = 8080;
@@ -31,13 +33,20 @@ class Server {
         app.use(body_parser_1.default.urlencoded({ extended: true }));
         app.use(body_parser_1.default.json());
         app.use(express_session_1.default({
-            secret: 'session-api',
+            secret: 'somerandonstuffs',
+            key: 'user_sid',
             resave: false,
             saveUninitialized: true,
-            cookie: { secure: false }
+            cookie: {
+                // @ts-ignore
+                expires: 600000
+            }
         }));
         app.use(connect_flash_1.default());
         app.use(express_paginate_1.default.middleware(10, 50));
+        app.use(cookie_parser_1.default());
+        // Middlewares Cookies and Sessions
+        app.use(Auth_1.Auth.checkSessionAuth);
         // Middlewares Request
         // GET ROUTES
         // ROUTES CHARACTERS
@@ -47,8 +56,9 @@ class Server {
         app.get('/category', CategoryController_1.CategoryController.index);
         app.get('/category/show/:id', CategoryController_1.CategoryController.show);
         // ROUTES ADMIN
-        app.get('/admin/register', UserController_1.UserController.register);
-        app.get('/admin/login', UserController_1.UserController.login);
+        app.get('/admin/register', Auth_1.Auth.checkConnected, UserController_1.UserController.register);
+        app.get('/admin/login', Auth_1.Auth.checkConnected, UserController_1.UserController.login);
+        app.get('/admin/logout', UserController_1.UserController.logout);
         app.get('/admin', UserController_1.UserController.admin);
         app.get('/admin/characters', UserController_1.UserController.listingCharacters);
         app.get('/admin/categories', UserController_1.UserController.listingCategories);
