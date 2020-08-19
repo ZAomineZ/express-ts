@@ -1,4 +1,4 @@
-<%- include ('../common/header.ejs') %>
+<%- include ../common/header.ejs %>
 
 <div class="container pt-5">
     <h1>Personnage : <%= character.name %></h1>
@@ -26,20 +26,22 @@
     <div id="commentary">
         <h2>Commentaires</h2>
         <!-- COMPONENT COMMENTS -->
-        <% Comments.forEach(function (comment) { %>
-            <%- include('./comment.ejs', {comment}); %>
+        <% Comments.forEach(function (commentFront) { %>
+            <%- include ./comment.ejs %>
         <% }); %>
 
         <!-- COMPONENT COMMENT FORM -->
         <h2>Votre commentaire</h2>
-        <form action="#" id="form-comment" method="POST">
+        <form action="#" id="form-commentFront" method="POST">
+            <input type="hidden" id="characterID" value="<%= character.id %>">
             <div class="form-group">
                 <label for="content">*Ce que voulez partager sur ce personnage</label>
                 <textarea name="content" id="content" cols="30" rows="10" class="form-control"></textarea>
             </div>
-            <button class="btn btn-primary">Envoyer</button>
+            <button class="btn btn-primary" type="submit">Envoyer</button>
         </form>
     </div>
 </div>
+<script src='/front/CommentFront.js' type="module"></script>
 
-<%- include ('../common/footer.ejs') %>
+<%- include ../common/footer.ejs %>

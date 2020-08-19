@@ -19,6 +19,7 @@ const moment_1 = __importDefault(require("moment"));
 const User_1 = require("../middlewares/User");
 const Pagination_1 = require("../Helpers/Pagination");
 const express_paginate_1 = __importDefault(require("express-paginate"));
+const UserModel_1 = require("../Models/UserModel");
 class UserController {
     /**
      * @param {Request} req
@@ -86,6 +87,26 @@ class UserController {
      * @param {Request} req
      * @param {Response} res
      *
+     *  @return Promise<void>
+     */
+    static updateRole(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = parseInt(req.params.id);
+            const user = yield (new UserModel_1.UserModel()).findByID(id);
+            res.render('admin/users/role', { user });
+        });
+    }
+    static updateRolePOST(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const params = req.params;
+            return User_1.User.updateRole(res, body, params);
+        });
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     *
      * @return Promise<void>
      */
     static listingCharacters(req, res) {
@@ -124,9 +145,20 @@ class UserController {
     /**
      * @param {Request} req
      * @param {Response} res
+     *
+     * @return Promise<void>
      */
     static listingUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const results = yield (new UserModel_1.UserModel()).fetchAll();
+            const pagination = new Pagination_1.Pagination();
+            const paginationData = yield pagination.paginate(req, results, UserModel_1.UserModel);
+            res.render('admin/users/index', {
+                users: paginationData,
+                moment: moment_1.default,
+                pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+                currentPage: pagination.currentPage ? pagination.currentPage : 1
+            });
         });
     }
 }

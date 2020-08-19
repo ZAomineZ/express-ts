@@ -65,6 +65,25 @@ class User {
             return res.redirect('/admin');
         });
     }
+    /**
+     *
+     * @param {Response} res
+     * @param {any} body
+     * @param {any} params
+     */
+    static updateRole(res, body, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const role = body.role ? parseInt(body.role) : 0;
+            const id = params.id ? parseInt(params.id) : null;
+            DB_1.DB.connect().query('UPDATE users SET role = ? WHERE id = ?', [role, id], function (error) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    res.redirect('/admin/users');
+                }
+            });
+        });
+    }
 }
 exports.User = User;
 User.password = new Password_1.Password;

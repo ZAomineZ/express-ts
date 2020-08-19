@@ -5,6 +5,8 @@ const DB_1 = require("../DB");
 class UserModel {
     /**
      * @param {String} name
+     *
+     * @return Promise<any>
      */
     findByName(name) {
         let promise = new Promise((resolve, reject) => {
@@ -18,6 +20,40 @@ class UserModel {
             });
         });
         return promise.then((result) => result[0]);
+    }
+    /**
+     * @param {String} name
+     *
+     * @return Promise<any>
+     */
+    findByID(id) {
+        let promise = new Promise((resolve, reject) => {
+            const query = 'SELECT id, username, role FROM users WHERE id = ?';
+            DB_1.DB.connect().query(query, [id], function (error, results) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    resolve(results);
+                }
+            });
+        });
+        return promise.then((result) => result[0]);
+    }
+    /**
+     * @return Promise<any>
+     */
+    fetchAll() {
+        let promise = new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM users';
+            DB_1.DB.connect().query(query, function (error, results) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    resolve(results);
+                }
+            });
+        });
+        return promise.then((result) => result);
     }
 }
 exports.UserModel = UserModel;

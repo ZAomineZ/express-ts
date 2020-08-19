@@ -1,0 +1,39 @@
+<%- include('../Common/header.ejs') %>
+
+<h1>Users</h1>
+<div id="dashboard">
+    <table class="table mt-4">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% users.forEach(function (user, key) { %>
+            <tr>
+                <td scope="row"><%= key + 1 %></td>
+                <td><%= user.username %></td>
+                <td><%= user.email %></td>
+                <td>
+                    <%= user.role ? 'ADMIN' : 'USER' %>
+                </td>
+                <td>
+                    <%= moment(user.created_at).format('MMMM Do YYYY') %>
+                </td>
+                <td>
+                    <a href="/admin/user/role/<%= user.id %>" class="btn btn-primary">Update to role</a>
+                    <a href="/admin/user/delete/<%= user.id %>" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+    <%- include('../../pagination.ejs') %>
+</div>
+
+<%- include('../Common/footer.ejs') %>

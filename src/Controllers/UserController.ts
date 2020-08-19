@@ -6,6 +6,7 @@ import {User} from "../middlewares/User";
 import {Query} from "mysql";
 import {Pagination} from "../Helpers/Pagination";
 import paginate from "express-paginate";
+import {UserModel} from "../Models/UserModel";
 
 export class UserController {
     /**
@@ -77,6 +78,25 @@ export class UserController {
      * @param {Request} req
      * @param {Response} res
      *
+     *  @return Promise<void>
+     */
+    static async updateRole (req: Request, res: Response): Promise<void> {
+        const id = parseInt(req.params.id)
+        const user = await (new UserModel()).findByID(id)
+        res.render('admin/users/role', {user})
+    }
+
+    static async updateRolePOST (req: Request, res: Response) {
+        const body = req.body
+        const params = req.params
+
+        return User.updateRole(res, body, params)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     *
      * @return Promise<void>
      */
     static async listingCharacters (req: Request, res: Response): Promise<void> {
@@ -115,8 +135,19 @@ export class UserController {
     /**
      * @param {Request} req
      * @param {Response} res
+     *
+     * @return Promise<void>
      */
-    static async listingUsers(req: Request, res: Response) {
-        
+    static async listingUsers(req: Request, res: Response): Promise<void> {
+        const results = await (new UserModel()).fetchAll()
+
+        const pagination = new Pagination()
+        const paginationData = await pagination.paginate(req, results, UserModel)
+        res.render('admin/users/index', {
+            users: paginationData,
+            moment,
+            pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+            currentPage: pagination.currentPage ? pagination.currentPage : 1
+        })
     }
 }

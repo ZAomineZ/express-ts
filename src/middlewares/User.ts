@@ -55,4 +55,22 @@ export class User {
         res.end()
         return res.redirect('/admin')
     }
+
+    /**
+     *
+     * @param {Response} res
+     * @param {any} body
+     * @param {any} params
+     */
+    static async updateRole(res: Response, body: any, params: any) {
+        const role = body.role ? parseInt(body.role) : 0
+        const id = params.id ? parseInt(params.id) : null
+
+        DB.connect().query('UPDATE users SET role = ? WHERE id = ?', [role, id], function (error) {
+            if (error) throw error
+            if (!error) {
+                res.redirect('/admin/users')
+            }
+        })
+    }
 }

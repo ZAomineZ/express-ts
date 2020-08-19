@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ejs_locals_1 = __importDefault(require("ejs-locals"));
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
@@ -27,12 +28,14 @@ class Server {
         let $this = this;
         // Use EJS Template
         const app = express_1.default();
+        app.engine('ejs', ejs_locals_1.default);
         Server.useTemplateEjs(app);
-        // Generate Links CSS
+        // Generate Links CSS AND JS
         app.use('/assets', express_1.default.static(path_1.default.join(__dirname, '..', 'assets')));
+        app.use('/front', express_1.default.static(path_1.default.join(__dirname, '..', 'dist/Front')));
         // Middlewares
         app.use(body_parser_1.default.urlencoded({ extended: true }));
-        app.use(body_parser_1.default.json());
+        app.use(body_parser_1.default.json({ type: 'application/*+json' }));
         app.use(express_session_1.default({
             secret: 'somerandonstuffs',
             key: 'user_sid',
@@ -69,6 +72,7 @@ class Server {
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
         app.get('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
+        app.get('/admin/user/role/:id', UserController_1.UserController.updateRole);
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage_1.FileStorage.upload('characters/');
@@ -80,6 +84,9 @@ class Server {
         app.post('/admin/category/update/:id', uploadCategories.single('image'), CategoryController_1.CategoryController.update);
         // ROUTES COMMENTS
         app.post('/character/show/:id', CommentController_1.CommentController.comment);
+        app.post('/api/character/show/reply/:id', CommentController_1.CommentController.reply);
+        // ROUTES ROLES
+        app.post('/admin/user/role/:id', UserController_1.UserController.updateRolePOST);
         // ROUTES ADMIN
         app.post('/admin/register', UserController_1.UserController.registerPOST);
         app.post('/admin/login', UserController_1.UserController.loginPOST);

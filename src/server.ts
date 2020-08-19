@@ -1,4 +1,5 @@
 import {Express} from "express"
+import engine from 'ejs-locals'
 import express from 'express'
 import bodyParser from 'body-parser'
 import path from "path";
@@ -28,14 +29,17 @@ export default class Server {
 
         // Use EJS Template
         const app = express();
+        app.engine('ejs', engine)
+
         Server.useTemplateEjs(app);
 
-        // Generate Links CSS
+        // Generate Links CSS AND JS
         app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+        app.use('/front', express.static(path.join(__dirname, '..', 'dist/Front')));
 
         // Middlewares
         app.use(bodyParser.urlencoded({extended: true}));
-        app.use(bodyParser.json());
+        app.use(bodyParser.json({ type: 'application/*+json' }))
         app.use(session({
             secret: 'somerandonstuffs',
             key: 'user_sid',
@@ -76,9 +80,11 @@ export default class Server {
 
         app.get('/admin/character/create', CharacterController.create);
         app.get('/admin/category/create', CategoryController.create);
+
         app.get('/admin/character/update/:id', CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController.edit)
         app.get('/admin/character/delete/:id', CharacterController.delete);
+        app.get('/admin/user/role/:id', UserController.updateRole)
 
         // POST Routes
         // ROUTES CHARACTERS
@@ -93,6 +99,10 @@ export default class Server {
 
         // ROUTES COMMENTS
         app.post('/character/show/:id', CommentController.comment)
+        app.post('/api/character/show/reply/:id', CommentController.reply)
+
+        // ROUTES ROLES
+        app.post('/admin/user/role/:id', UserController.updateRolePOST)
 
         // ROUTES ADMIN
         app.post('/admin/register', UserController.registerPOST)

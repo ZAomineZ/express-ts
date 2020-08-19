@@ -11,4 +11,11 @@ export class CommentController {
         return Comment.create(res, req)
     }
 
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static reply (req: Request, res: Response) {
+        return Comment.reply(res, req)
+    }
 }

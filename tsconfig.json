@@ -4,7 +4,13 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "target": "es6",
-    "strict": true
+    "sourceMap": false,
+    "strict": true,
+    "lib": [
+      "dom",
+      "es2015",
+      "es6"
+    ]
   },
   "include": [
     "src/**/*"

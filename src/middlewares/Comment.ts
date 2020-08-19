@@ -31,4 +31,12 @@ export class Comment {
         })
     }
 
+    /**
+     * @param {Response} res
+     * @param {Request} req
+     */
+    static reply (res: Response, req: Request) {
+        console.log(req)
+        res.json({});
+    }
 }

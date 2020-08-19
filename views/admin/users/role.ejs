@@ -1,0 +1,17 @@
+<%- include('../Common/header.ejs') %>
+
+<div class="container pt-3">
+    <h1>Update Role to user "<%= user.username %>"</h1>
+    <form action="#" method="POST" class="pt-4">
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select name="role" id="role" class="form-control">
+                <option value="0" selected="<% user.role === 0 %>">User</option>
+                <option value="1" selected="<% user.role === 1 %>">Admin</option>
+            </select>
+        </div>
+        <button class="btn btn-primary">Envoyer</button>
+    </form>
+</div>
+
+<%- include('../Common/footer.ejs') %>
