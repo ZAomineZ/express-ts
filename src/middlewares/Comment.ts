@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {DB} from "../DB";
 import {Auth} from "./Auth";
 import {Query} from "mysql";
+import {CommentModel} from "../Models/CommentModel";
 
 export class Comment {
 
@@ -36,7 +37,28 @@ export class Comment {
      * @param {Request} req
      */
     static reply (res: Response, req: Request) {
-        console.log(req)
-        res.json({});
+        const bodyJSON = Object.keys(req.body)
+        const params = req.params
+        const content = bodyJSON[0] ? bodyJSON[0]: null
+
+        // @ts-ignore
+        let userID = Auth.getAuth(req) ? Auth.getAuth(req).id : null
+        if (!userID) {
+            return res.json({
+                success: false,
+                message: 'Vous devez vous connecter afin poursuivre cette action !!!'
+            })
+        }
+        let data = [content, userID, params.id, params.commentID, new Date()]
+        return DB.connect().query('INSERT INTO comments SET content = ?, user_id = ?, character_id = ?, reply_id = ?, created_at = ?', data, async function (error) {
+            if (error) throw error
+            if (!error) {
+                const lastComment = await (new CommentModel()).findLastComment(userID)
+                res.json({
+                    success: true,
+                    lastComment
+                })
+            }
+        })
     }
 }

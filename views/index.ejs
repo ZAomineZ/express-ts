@@ -1,14 +1,14 @@
-<%- include ('common/header.ejs') %>
+<%- include common/header.ejs %>
 
 <div class="container marketing pt-5">
     <h1>Bienvenue sur mon site</h1>
-    <%- include ('./flash.ejs') %>
+    <%- include ./flash.ejs %>
     <div class="row pt-5">
         <% characters.forEach(function (character) { %>
-            <%- include('character/character.ejs', {character}); %>
+            <%- include character/character.ejs %>
         <% }); %>
     </div>
-    <%- include ('./pagination.ejs') %>
+    <%- include ./pagination.ejs %>
 </div>
 
-<%- include ('common/footer.ejs') %>
+<%- include common/footer.ejs %>

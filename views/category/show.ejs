@@ -1,4 +1,4 @@
-<%- include('../common/header.ejs')  %>
+<%- include ../common/header.ejs  %>
 
     <main role="main" class="container">
         <img src="/assets/img/category/<%= category.image !== null ? category.image : 'one-piece.jpg' %>" alt="Image category '<%= category.name %>'" class="img-fluid">
@@ -10,11 +10,11 @@
             <h2>Personnages</h2>
             <div class="row pt-5">
                 <% characters.forEach(function(character) { %>
-                    <%- include('../character/character.ejs', {character}); %>
+                    <%- include ../character/character.ejs %>
                 <% }) %>
             </div>
-            <%- include ('../pagination.ejs') %>
+            <%- include ../pagination.ejs %>
         </div>
     </main>
 
-<%- include('../common/footer.ejs')  %>
+<%- include ../common/footer.ejs  %>

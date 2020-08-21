@@ -70,8 +70,11 @@ export class Characters {
             if (!error) {
                 const character = results[0]
 
+                const commentModel = new CommentModel()
                 let Category = await (new CategoryModel()).findById(character.category);
-                let Comments = await (new CommentModel()).findByCharacter(character.id)
+                let Comments = await commentModel.findByCharacter(character.id)
+                Comments = commentModel.commentsWithReply(Comments)
+
                 return response.render('character/show', {character, Comments, moment, Category})
             }
         })

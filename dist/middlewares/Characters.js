@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
@@ -87,8 +86,10 @@ class Characters {
                         throw error;
                     if (!error) {
                         const character = results[0];
+                        const commentModel = new CommentModel_1.CommentModel();
                         let Category = yield (new CategoryModel_1.CategoryModel()).findById(character.category);
-                        let Comments = yield (new CommentModel_1.CommentModel()).findByCharacter(character.id);
+                        let Comments = yield commentModel.findByCharacter(character.id);
+                        Comments = commentModel.commentsWithReply(Comments);
                         return response.render('character/show', { character, Comments, moment: moment_1.default, Category });
                     }
                 });

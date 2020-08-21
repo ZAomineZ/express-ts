@@ -99,7 +99,7 @@ export default class Server {
 
         // ROUTES COMMENTS
         app.post('/character/show/:id', CommentController.comment)
-        app.post('/api/character/show/reply/:id', CommentController.reply)
+        app.post('/api/character/show/:id/reply/:commentID', CommentController.reply)
 
         // ROUTES ROLES
         app.post('/admin/user/role/:id', UserController.updateRolePOST)

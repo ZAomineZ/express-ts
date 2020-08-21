@@ -28,6 +28,15 @@
         <!-- COMPONENT COMMENTS -->
         <% Comments.forEach(function (commentFront) { %>
             <%- include ./comment.ejs %>
+            <div id="reply">
+                <% if (commentFront.reply) { %>
+                    <% commentFront.reply.forEach(function (reply) { %>
+                        <div id="reply-<%= reply.id %>" class="pl-5">
+                            <%- include ./reply.ejs %>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
         <% }); %>
 
         <!-- COMPONENT COMMENT FORM -->
