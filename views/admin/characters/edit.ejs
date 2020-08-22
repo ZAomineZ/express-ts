@@ -1,8 +1,8 @@
-<%- include('../Common/header.ejs') %>
+<%- include ../Common/header.ejs %>
 
 <div class="container pt-5">
     <h1>Modification du personnage : <%= character.name %></h1>
-    <form action="#" method="POST" class="pt-2">
+    <form action="#" method="POST" enctype="multipart/form-data" class="pt-2">
         <div class="form-group">
             <label for="name">Nom du personnage</label>
             <input type="text" class="form-control" name="name" id="name" value="<%= character.name %>">
@@ -32,8 +32,12 @@
                 <%= character.content %>
             </textarea>
         </div>
+        <div class="custom-file mb-3">
+            <input type="file" id="image" name="image" class="custom-file-input">
+            <label for="image" class="custom-file-label">Votre image</label>
+        </div>
         <button class="btn btn-primary" type="submit">Envoyer</button>
     </form>
 </div>
 
-<%- include('../Common/footer.ejs') %>
+<%- include ../Common/footer.ejs %>

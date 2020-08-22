@@ -43,11 +43,11 @@ export default class Server {
         app.use(session({
             secret: 'somerandonstuffs',
             key: 'user_sid',
-            resave: false,
+            resave: true,
             saveUninitialized: true,
             cookie: {
                 // @ts-ignore
-                expires: 600000
+                expires: 24 * 60 * 60 * 1000
             }
         }))
         app.use(flash())
@@ -73,13 +73,13 @@ export default class Server {
         app.get('/admin/login', Auth.checkConnected, UserController.login)
         app.get('/admin/logout', UserController.logout)
 
-        app.get('/admin', UserController.admin)
-        app.get('/admin/characters', UserController.listingCharacters)
-        app.get('/admin/categories', UserController.listingCategories);
-        app.get('/admin/users', UserController.listingUsers)
+        app.get('/admin', Auth.checkRoleAdmin, UserController.admin)
+        app.get('/admin/characters', Auth.checkRoleAdmin, UserController.listingCharacters)
+        app.get('/admin/categories', Auth.checkRoleAdmin, UserController.listingCategories);
+        app.get('/admin/users', Auth.checkRoleAdmin, UserController.listingUsers)
 
-        app.get('/admin/character/create', CharacterController.create);
-        app.get('/admin/category/create', CategoryController.create);
+        app.get('/admin/character/create', Auth.checkRoleAdmin, CharacterController.create);
+        app.get('/admin/category/create', Auth.checkRoleAdmin, CategoryController.create);
 
         app.get('/admin/character/update/:id', CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController.edit)
@@ -90,7 +90,7 @@ export default class Server {
         // ROUTES CHARACTERS
         let upload = FileStorage.upload('characters/')
         app.post('/admin/character/create', upload.single('image'), CharacterController.createPOST);
-        app.post('/admin/character/update/:id', CharacterController.update);
+        app.post('/admin/character/update/:id', upload.single('image'), CharacterController.update);
 
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage.upload('category/')

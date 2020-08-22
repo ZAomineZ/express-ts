@@ -90,7 +90,8 @@ class Characters {
                         let Category = yield (new CategoryModel_1.CategoryModel()).findById(character.category);
                         let Comments = yield commentModel.findByCharacter(character.id);
                         Comments = commentModel.commentsWithReply(Comments);
-                        return response.render('character/show', { character, Comments, moment: moment_1.default, Category });
+                        const characters = yield (new CharacterModel_1.CharacterModel()).findSimilar(3, Category, id);
+                        return response.render('character/show', { character, characters, Comments, moment: moment_1.default, Category });
                     }
                 });
             });
@@ -118,18 +119,22 @@ class Characters {
     /**
      * @param {any} response
      * @param {ParamsDictionary} params
+     * @param {CallableFunction} flash
+     * @param {any} reqFile
      * @param {Response} res
      *
      * @return {Query}
      */
-    static update(response, params, res) {
+    static update(response, params, flash, reqFile, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let category = yield (new CategoryModel_1.CategoryModel()).findOrFail(response.category);
             if (!category) {
-                return res.redirect('/character/update/' + params.id);
+                flash('danger', 'Aucune catégorie à était sélectionné ou n\'est pas dans notre base de donnée !');
+                return res.redirect('/admin/character/update/' + params.id);
             }
-            const data = [response.name, response.age, response.size, category.id, response.content, new Date(), params.id];
-            return DB_1.DB.connect().query('UPDATE characters SET name = ?, age = ?, size = ?, category = ?, content = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
+            let image = reqFile !== null ? reqFile.filename : null;
+            const data = [response.name, response.age, response.size, category.id, response.content, image, new Date(), params.id];
+            return DB_1.DB.connect().query('UPDATE characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
                 if (error)
                     throw error;
                 if (!error) {

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CharacterModel = void 0;
 const DB_1 = require("../DB");
 class CharacterModel {
     /**
@@ -92,6 +93,28 @@ class CharacterModel {
                 });
             });
             return promise.then((result) => result[0]);
+        });
+    }
+    /**
+     * @param {number} limit
+     * @param {object} category
+     * @param {number} characterID
+     *
+     * @return Promise<any>
+     */
+    findSimilar(limit, category, characterID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = 'SELECT * FROM characters WHERE category = ? AND id != ? ORDER BY id DESC LIMIT ?';
+                DB_1.DB.connect().query(query, [category.id, characterID, limit], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
         });
     }
     /**

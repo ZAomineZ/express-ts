@@ -39,11 +39,11 @@ class Server {
         app.use(express_session_1.default({
             secret: 'somerandonstuffs',
             key: 'user_sid',
-            resave: false,
+            resave: true,
             saveUninitialized: true,
             cookie: {
                 // @ts-ignore
-                expires: 600000
+                expires: 24 * 60 * 60 * 1000
             }
         }));
         app.use(connect_flash_1.default());
@@ -63,12 +63,12 @@ class Server {
         app.get('/admin/register', Auth_1.Auth.checkConnected, UserController_1.UserController.register);
         app.get('/admin/login', Auth_1.Auth.checkConnected, UserController_1.UserController.login);
         app.get('/admin/logout', UserController_1.UserController.logout);
-        app.get('/admin', UserController_1.UserController.admin);
-        app.get('/admin/characters', UserController_1.UserController.listingCharacters);
-        app.get('/admin/categories', UserController_1.UserController.listingCategories);
-        app.get('/admin/users', UserController_1.UserController.listingUsers);
-        app.get('/admin/character/create', CharacterController_1.CharacterController.create);
-        app.get('/admin/category/create', CategoryController_1.CategoryController.create);
+        app.get('/admin', Auth_1.Auth.checkRoleAdmin, UserController_1.UserController.admin);
+        app.get('/admin/characters', Auth_1.Auth.checkRoleAdmin, UserController_1.UserController.listingCharacters);
+        app.get('/admin/categories', Auth_1.Auth.checkRoleAdmin, UserController_1.UserController.listingCategories);
+        app.get('/admin/users', Auth_1.Auth.checkRoleAdmin, UserController_1.UserController.listingUsers);
+        app.get('/admin/character/create', Auth_1.Auth.checkRoleAdmin, CharacterController_1.CharacterController.create);
+        app.get('/admin/category/create', Auth_1.Auth.checkRoleAdmin, CategoryController_1.CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
         app.get('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
@@ -77,7 +77,7 @@ class Server {
         // ROUTES CHARACTERS
         let upload = FileStorage_1.FileStorage.upload('characters/');
         app.post('/admin/character/create', upload.single('image'), CharacterController_1.CharacterController.createPOST);
-        app.post('/admin/character/update/:id', CharacterController_1.CharacterController.update);
+        app.post('/admin/character/update/:id', upload.single('image'), CharacterController_1.CharacterController.update);
         // ROUTES CATEGORIES
         let uploadCategories = FileStorage_1.FileStorage.upload('category/');
         app.post('/admin/category/create', uploadCategories.single('image'), CategoryController_1.CategoryController.createPOST);

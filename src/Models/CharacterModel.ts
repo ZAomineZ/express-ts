@@ -79,6 +79,26 @@ export class CharacterModel {
 
     /**
      * @param {number} limit
+     * @param {object} category
+     * @param {number} characterID
+     *
+     * @return Promise<any>
+     */
+    async findSimilar(limit: number, category: {id: number}, characterID: number): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = 'SELECT * FROM characters WHERE category = ? AND id != ? ORDER BY id DESC LIMIT ?';
+            DB.connect().query(query, [category.id, characterID, limit], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
+     * @param {number} limit
      * @param {number} offset
      * @param {number|null} category
      *

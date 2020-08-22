@@ -49,6 +49,7 @@ class CommentFront {
         const content = this.content.value
         // @ts-ignore
         const url = '/api/character/show/' + this.inputCharacter.value + '/reply/' + commentID
+        // @ts-ignore
         let response = await axios.post(url, content, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',

@@ -4,6 +4,7 @@ export class CommentModel {
 
     /**
      * @param {number} characterID
+     * @return {Query<any>}
      */
     async findByCharacter(characterID: number) {
         let promise = new Promise((resolve: any, reject: any) => {
@@ -20,6 +21,7 @@ export class CommentModel {
 
     /**
      * @param {number|null} userID
+     * @return {Query<any>}
      */
     async findLastComment(userID?: number|null) {
         let promise = new Promise((resolve: any, reject: any) => {
@@ -68,7 +70,6 @@ export class CommentModel {
                 newData[comment.id] = comment
             }
         })
-        console.log(newData)
         return newData
     }
 }

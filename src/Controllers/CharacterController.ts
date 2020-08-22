@@ -68,7 +68,10 @@ export class CharacterController {
     static update (req: Request, res: Response): Promise<void | Query> {
         const response = req.body;
         const params = req.params;
-        return Characters.update(response, params, res)
+        const reqFile = req.file
+        const flash = req.flash
+
+        return Characters.update(response, params, flash, reqFile, res)
     }
 
     /**

@@ -50,6 +50,14 @@
             <button class="btn btn-primary" type="submit">Envoyer</button>
         </form>
     </div>
+    <div id="characters-similar" class="pt-5">
+        <h2>Personnages Similaires</h2>
+        <div class="row pt-3">
+            <% characters.forEach(function (character) { %>
+                <%- include character.ejs %>
+            <% }) %>
+        </div>
+    </div>
 </div>
 <script src='/front/CommentFront.js' type="module"></script>
 

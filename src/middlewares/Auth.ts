@@ -29,6 +29,22 @@ export class Auth {
 
     /**
      * @param {Request} req
+     * @param {Response} res
+     * @param {any} next
+     */
+    static checkRoleAdmin(req: Request, res: Response, next: any) {
+        let user = Auth.getAuth(req)
+        // @ts-ignore
+        if (user && user.role !== 1) {
+            req.flash('danger', "Vous n'êtes pas autorizé autorisé à accéder à cette page !")
+            res.redirect('/')
+        } else {
+            next()
+        }
+    }
+
+    /**
+     * @param {Request} req
      *
      * @return {Object|number}
      */

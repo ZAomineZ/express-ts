@@ -75,7 +75,8 @@ export class Characters {
                 let Comments = await commentModel.findByCharacter(character.id)
                 Comments = commentModel.commentsWithReply(Comments)
 
-                return response.render('character/show', {character, Comments, moment, Category})
+                const characters = await (new CharacterModel()).findSimilar(3, Category, id)
+                return response.render('character/show', {character, characters, Comments, moment, Category})
             }
         })
     }
@@ -100,18 +101,22 @@ export class Characters {
     /**
      * @param {any} response
      * @param {ParamsDictionary} params
+     * @param {CallableFunction} flash
+     * @param {any} reqFile
      * @param {Response} res
      *
      * @return {Query}
      */
-    static async update(response: any, params: ParamsDictionary, res: Response): Promise<Query|void> {
+    static async update(response: any, params: ParamsDictionary, flash: CallableFunction, reqFile?: any, res: Response): Promise<Query | void> {
         let category = await (new CategoryModel()).findOrFail(response.category);
         if (!category) {
-            return res.redirect('/character/update/' + params.id)
+            flash('danger', 'Aucune catégorie à était sélectionné ou n\'est pas dans notre base de donnée !')
+            return res.redirect('/admin/character/update/' + params.id)
         }
 
-        const data = [response.name, response.age, response.size, category.id, response.content, new Date(), params.id];
-        return DB.connect().query('UPDATE characters SET name = ?, age = ?, size = ?, category = ?, content = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
+        let image = reqFile !== null ? reqFile.filename : null;
+        const data = [response.name, response.age, response.size, category.id, response.content, image, new Date(), params.id];
+        return DB.connect().query('UPDATE characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
             if (error) throw error;
             if (!error) {
                 return res.redirect('/')
