@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CharacterController = void 0;
 const Characters_1 = require("../middlewares/Characters");
 const CategoryModel_1 = require("../Models/CategoryModel");
 class CharacterController {
@@ -21,6 +20,13 @@ class CharacterController {
      */
     static index(req, res) {
         Characters_1.Characters.all(res, req);
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static search(req, res) {
+        return Characters_1.Characters.search(req, res);
     }
     /**
      * @param {Request} req

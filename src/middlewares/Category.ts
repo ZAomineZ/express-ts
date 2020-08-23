@@ -1,4 +1,4 @@
-import {Response} from "express";
+import {Request, Response} from "express";
 import {DB} from "../DB";
 import slugify from 'slugify'
 import {Query} from "mysql";
@@ -11,11 +11,23 @@ export class Category {
     /**
      * @param {Response} res
      *
-     * @return void
+     * @return Promise<void>
      */
     static async all(res: Response): Promise<void> {
         const categories = await (new CategoryModel()).fetchAll();
-        res.render('category/index', {categories, moment})
+        return res.render('category/index', {categories, moment})
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     *
+     * @return Promise<void>
+     */
+    static async search(req: Request, res: Response): Promise<void> {
+        const query = req.query
+        const categories  = await (new CategoryModel()).findSearch(query.search)
+        return res.render('category/index.ejs', {categories, moment})
     }
 
     /**

@@ -1,5 +1,11 @@
-<% if (message.length > 0) { %>
+<% if (message && message.length > 0) { %>
     <div class="alert alert-success mt-3" role="alert">
         <%= message %>
+    </div>
+<% } %>
+
+<% if (danger && danger.length > 0) { %>
+    <div class="alert alert-danger mt-3" role="alert">
+        <%= danger %>
     </div>
 <% } %>

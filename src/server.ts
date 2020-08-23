@@ -62,14 +62,17 @@ export default class Server {
         // GET ROUTES
         // ROUTES CHARACTERS
         app.get('/', CharacterController.index);
+        app.get('/characters/search', CharacterController.search)
         app.get('/character/show/:id', CharacterController.show);
 
         // ROUTES CATEGORIES
         app.get('/category', CategoryController.index);
+        app.get('/category/search', CategoryController.search)
         app.get('/category/show/:id', CategoryController.show);
 
         // ROUTES ADMIN
         app.get('/admin/register', Auth.checkConnected, UserController.register);
+        app.get('/admin/forget', Auth.checkConnected, UserController.forget);
         app.get('/admin/login', Auth.checkConnected, UserController.login)
         app.get('/admin/logout', UserController.logout)
 
@@ -107,6 +110,7 @@ export default class Server {
         // ROUTES ADMIN
         app.post('/admin/register', UserController.registerPOST)
         app.post('/admin/login', UserController.loginPOST)
+        app.post('/admin/forget', UserController.forgetPOST)
 
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès')

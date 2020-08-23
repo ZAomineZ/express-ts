@@ -32,6 +32,13 @@ class CategoryController {
      * @param {Request} req
      * @param {Response} res
      */
+    static search(req, res) {
+        return Category_1.Category.search(req, res);
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
     static create(req, res) {
         res.render('admin/categories/create');
     }

@@ -2,6 +2,12 @@
 
 <div class="container marketing pt-5">
     <h1>Les Categories</h1>
+    <form action="/category/search" method="GET">
+        <div class="form-group">
+            <label id="search"></label>
+            <input type="text" id="search" name="search" placeholder="Rechercher..." class="form-control">
+        </div>
+    </form>
     <div class="row pt-5">
         <% categories.forEach(function (category) { %>
             <div class="col-md-4">

@@ -1,4 +1,4 @@
-import {Response} from "express";
+import {Request, Response} from "express";
 import {DB} from "../DB";
 import {Password} from "../Helpers/Password";
 import {Query} from "mysql";
@@ -27,6 +27,36 @@ export class User {
         return DB.connect().query('INSERT INTO users SET username = ?, email = ?, password = ?', data, function (error, results) {
             if (error) throw error
             if (!error) {
+                res.redirect('/admin/login')
+            }
+        })
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static async forget(req: Request, res: Response) {
+        let email = req.body.email
+        let password = req.body.new_password
+        let passwordConfirmation = req.body.new_password_confirmation
+
+        const user = await (new UserModel()).findByEmail(email)
+        if (!user) {
+            req.flash('danger', 'Cet email n\'est pas éxistant dans notre base de donnée !')
+            return res.redirect('/admin/forget')
+        }
+        if (!this.password.passwordIdem(password, passwordConfirmation)) {
+            req.flash('danger', 'Les mot de passes ne sont pas identiques !')
+            return res.redirect('/admin/forget')
+        }
+
+        password = await this.password.generatePassword(password)
+        const data = [password, email]
+        return DB.connect().query('UPDATE users SET password = ? WHERE email = ?', data, function (error) {
+            if (error) throw error
+            if (!error) {
+                req.flash('success', 'Vous avez modifié votre mot de passe avec succès !')
                 res.redirect('/admin/login')
             }
         })

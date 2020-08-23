@@ -42,12 +42,25 @@ class Category {
     /**
      * @param {Response} res
      *
-     * @return void
+     * @return Promise<void>
      */
     static all(res) {
         return __awaiter(this, void 0, void 0, function* () {
             const categories = yield (new CategoryModel_1.CategoryModel()).fetchAll();
-            res.render('category/index', { categories, moment: moment_1.default });
+            return res.render('category/index', { categories, moment: moment_1.default });
+        });
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     *
+     * @return Promise<void>
+     */
+    static search(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = req.query;
+            const categories = yield (new CategoryModel_1.CategoryModel()).findSearch(query.search);
+            return res.render('category/index.ejs', { categories, moment: moment_1.default });
         });
     }
     /**

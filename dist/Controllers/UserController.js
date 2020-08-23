@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserController = void 0;
 const CharacterModel_1 = require("../Models/CharacterModel");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const moment_1 = __importDefault(require("moment"));
@@ -25,7 +26,7 @@ class UserController {
      * @param {Response} res
      */
     static login(req, res) {
-        res.render('admin/login');
+        res.render('admin/login', { message: req.flash('success'), danger: req.flash('danger') });
     }
     /**
      * @param {Request} req
@@ -33,6 +34,13 @@ class UserController {
      */
     static register(req, res) {
         res.render('admin/register');
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static forget(req, res) {
+        res.render('admin/forget', { message: req.flash('success'), danger: req.flash('danger') });
     }
     /**
      * @param {Request} req
@@ -65,6 +73,13 @@ class UserController {
     static registerPOST(req, res) {
         const response = req.body;
         return User_1.User.register(response, res);
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static forgetPOST(req, res) {
+        return User_1.User.forget(req, res);
     }
     /**
      * @param {Request} req

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CharacterModel = void 0;
 const DB_1 = require("../DB");
 class CharacterModel {
     /**
@@ -20,6 +19,25 @@ class CharacterModel {
             let promise = new Promise((resolve, reject) => {
                 const query = 'SELECT * FROM characters';
                 DB_1.DB.connect().query(query, function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {string|null} querySearch
+     */
+    findSearch(querySearch) {
+        return __awaiter(this, void 0, void 0, function* () {
+            querySearch = "%" + querySearch + "%";
+            let promise = new Promise((resolve, reject) => {
+                const query = "SELECT * FROM characters WHERE name LIKE ?";
+                DB_1.DB.connect().query(query, [querySearch], function (error, results) {
                     if (error)
                         throw error;
                     if (!error) {

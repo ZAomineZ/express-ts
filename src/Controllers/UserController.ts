@@ -14,7 +14,7 @@ export class UserController {
      * @param {Response} res
      */
     static login (req: Request, res: Response) {
-        res.render('admin/login')
+        res.render('admin/login', {message: req.flash('success'), danger: req.flash('danger')})
     }
 
     /**
@@ -23,6 +23,14 @@ export class UserController {
      */
     static register (req: Request, res: Response) {
         res.render('admin/register')
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static forget (req: Request, res: Response) {
+        res.render('admin/forget', {message: req.flash('success'), danger: req.flash('danger')})
     }
 
     /**
@@ -57,6 +65,14 @@ export class UserController {
     static registerPOST (req: Request, res: Response): Promise<void | Query> {
         const response = req.body
         return User.register(response, res)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static forgetPOST (req: Request, res: Response) {
+        return User.forget(req, res)
     }
 
     /**

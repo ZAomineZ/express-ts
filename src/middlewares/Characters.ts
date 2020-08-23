@@ -58,6 +58,28 @@ export class Characters {
     }
 
     /**
+     * @param {Request} req
+     * @param {Response} res
+     *
+     * @return Promise<void>
+     */
+    static async search(req: Request, res: Response): Promise<void> {
+        const query = req.query
+        const characters = await (new CharacterModel()).findSearch(query.search)
+
+        const pagination = new Pagination()
+        const paginateData = await pagination.paginate(req, characters, CharacterModel)
+
+        return res.render('index.ejs', {
+            characters: paginateData,
+            moment,
+            message: req.flash('success'),
+            pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+            currentPage: pagination.currentPage ? pagination.currentPage : 1
+        })
+    }
+
+    /**
      * @param {Request} request
      * @param {Response} response
      *

@@ -72,6 +72,27 @@ class Characters {
         });
     }
     /**
+     * @param {Request} req
+     * @param {Response} res
+     *
+     * @return Promise<void>
+     */
+    static search(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = req.query;
+            const characters = yield (new CharacterModel_1.CharacterModel()).findSearch(query.search);
+            const pagination = new Pagination_1.Pagination();
+            const paginateData = yield pagination.paginate(req, characters, CharacterModel_1.CharacterModel);
+            return res.render('index.ejs', {
+                characters: paginateData,
+                moment: moment_1.default,
+                message: req.flash('success'),
+                pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
+                currentPage: pagination.currentPage ? pagination.currentPage : 1
+            });
+        });
+    }
+    /**
      * @param {Request} request
      * @param {Response} response
      *

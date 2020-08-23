@@ -43,6 +43,36 @@ class User {
         });
     }
     /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static forget(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let email = req.body.email;
+            let password = req.body.new_password;
+            let passwordConfirmation = req.body.new_password_confirmation;
+            const user = yield (new UserModel_1.UserModel()).findByEmail(email);
+            if (!user) {
+                req.flash('danger', 'Cet email n\'est pas éxistant dans notre base de donnée !');
+                return res.redirect('/admin/forget');
+            }
+            if (!this.password.passwordIdem(password, passwordConfirmation)) {
+                req.flash('danger', 'Les mot de passes ne sont pas identiques !');
+                return res.redirect('/admin/forget');
+            }
+            password = yield this.password.generatePassword(password);
+            const data = [password, email];
+            return DB_1.DB.connect().query('UPDATE users SET password = ? WHERE email = ?', data, function (error) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    req.flash('success', 'Vous avez modifié votre mot de passe avec succès !');
+                    res.redirect('/admin/login');
+                }
+            });
+        });
+    }
+    /**
      * @param {any} response
      * @param {Response} res
      * @param {any} sessionReq

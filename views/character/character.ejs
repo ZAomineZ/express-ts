@@ -2,6 +2,11 @@
     <div class="card mb-4 shadow-sm">
         <img src="/assets/img/characters/<%= character.image %>" alt="Image character '<% character.name %>'" class="img-fluid">
         <div class="card-body">
+            <h3 class="card-title">
+                <strong>
+                    <%= character.name %>
+                </strong>
+            </h3>
             <p class="card-text">
                 <%= character.content.length >= 150 ? character.content.slice(0, 150) + '...' : character.content %>
             </p>

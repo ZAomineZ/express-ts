@@ -18,6 +18,14 @@ export class CharacterController {
     /**
      * @param {Request} req
      * @param {Response} res
+     */
+    static search(req: Request, res: Response) {
+        return Characters.search(req, res)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
      *
      * @return Promise<void>
      */

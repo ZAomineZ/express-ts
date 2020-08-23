@@ -55,12 +55,15 @@ class Server {
         // GET ROUTES
         // ROUTES CHARACTERS
         app.get('/', CharacterController_1.CharacterController.index);
+        app.get('/characters/search', CharacterController_1.CharacterController.search);
         app.get('/character/show/:id', CharacterController_1.CharacterController.show);
         // ROUTES CATEGORIES
         app.get('/category', CategoryController_1.CategoryController.index);
+        app.get('/category/search', CategoryController_1.CategoryController.search);
         app.get('/category/show/:id', CategoryController_1.CategoryController.show);
         // ROUTES ADMIN
         app.get('/admin/register', Auth_1.Auth.checkConnected, UserController_1.UserController.register);
+        app.get('/admin/forget', Auth_1.Auth.checkConnected, UserController_1.UserController.forget);
         app.get('/admin/login', Auth_1.Auth.checkConnected, UserController_1.UserController.login);
         app.get('/admin/logout', UserController_1.UserController.logout);
         app.get('/admin', Auth_1.Auth.checkRoleAdmin, UserController_1.UserController.admin);
@@ -90,6 +93,7 @@ class Server {
         // ROUTES ADMIN
         app.post('/admin/register', UserController_1.UserController.registerPOST);
         app.post('/admin/login', UserController_1.UserController.loginPOST);
+        app.post('/admin/forget', UserController_1.UserController.forgetPOST);
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès');
         });

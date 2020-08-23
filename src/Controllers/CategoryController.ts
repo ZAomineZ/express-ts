@@ -23,6 +23,14 @@ export class CategoryController {
      * @param {Request} req
      * @param {Response} res
      */
+    static search (req: Request, res: Response) {
+        return Category.search(req, res)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
     static create (req: Request, res: Response): void {
         res.render('admin/categories/create')
     }

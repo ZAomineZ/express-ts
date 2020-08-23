@@ -19,6 +19,23 @@ export class CharacterModel {
     }
 
     /**
+     * @param {string|null} querySearch
+     */
+    async findSearch(querySearch?: string|null) {
+        querySearch = "%" + querySearch + "%"
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = "SELECT * FROM characters WHERE name LIKE ?";
+            DB.connect().query(query, [querySearch], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
      * @param {number} categoryID
      *
      * @return Promise<any>

@@ -21,6 +21,22 @@ export class UserModel {
     }
 
     /**
+     * @param {string} email
+     */
+    findByEmail(email: string): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = 'SELECT id FROM users WHERE email = ?';
+            DB.connect().query(query, [email], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            })
+        });
+        return promise.then((result: any) => result[0])
+    }
+
+    /**
      * @param {String} name
      *
      * @return Promise<any>

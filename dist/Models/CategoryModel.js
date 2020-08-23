@@ -33,6 +33,25 @@ class CategoryModel {
         });
     }
     /**
+     * @param {string|null} querySearch
+     */
+    findSearch(querySearch) {
+        return __awaiter(this, void 0, void 0, function* () {
+            querySearch = "%" + querySearch + "%";
+            let promise = new Promise_1.default((resolve, reject) => {
+                const query = "SELECT * FROM category WHERE name LIKE ?";
+                DB_1.DB.connect().query(query, [querySearch], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
      * @param {string} slug
      */
     findOrFail(slug) {
