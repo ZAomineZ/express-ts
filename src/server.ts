@@ -91,6 +91,7 @@ export default class Server {
         app.get('/admin/category/update/:id', CategoryController.edit)
         app.get('/admin/character/delete/:id', csrfProtection, CharacterController.delete);
         app.get('/admin/user/role/:id', UserController.updateRole)
+        app.get('/admin/user/delete/:id', csrfProtection, UserController.delete)
 
         // POST Routes
         // ROUTES CHARACTERS

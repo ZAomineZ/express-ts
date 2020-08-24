@@ -35,6 +35,14 @@ export class UserController {
 
     /**
      * @param {Request} req
+     * @param res
+     */
+    static delete (req: Request, res: Response) {
+        return User.delete(res, req)
+    }
+
+    /**
+     * @param {Request} req
      * @param {Response} res
      */
     static logout(req: Request, res: Response) {
@@ -165,6 +173,8 @@ export class UserController {
         res.render('admin/users/index', {
             users: paginationData,
             moment,
+            message: req.flash('success'),
+            danger: req.flash('danger'),
             pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
             currentPage: pagination.currentPage ? pagination.currentPage : 1
         })

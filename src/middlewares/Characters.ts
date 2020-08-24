@@ -26,8 +26,8 @@ export class Characters {
         }
 
         let image = reqFile !== null ? reqFile.filename : null;
-        const data = [response.name, response.age, response.size, category.id, response.content, image, new Date()];
-        DB.connect().query('INSERT INTO characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ?', data, function (error, results, fields) {
+        const data = [response.name, response.age, response.sexe, response.size, category.id, response.content, image, new Date()];
+        DB.connect().query('INSERT INTO characters SET name = ?, age = ?, sexe = ?, size = ?, category = ?, content = ?, image = ?, created_at = ?', data, function (error, results, fields) {
             if (error) throw error;
             if (!error) {
                 req.flash('success', 'Your character has been created !')
@@ -163,9 +163,9 @@ export class Characters {
         if (!character) {
             return response.redirect('/admin/characters')
         }
-        if (request.session && request.session.csrfSecret !== request.csrfToken()) {
-            return response.redirect('/')
-        }
+        // if (request.session && request.session.csrfSecret !== request.csrfToken()) {
+        //     return response.redirect('/')
+        // }
 
         return DB.connect().query('DELETE FROM characters WHERE id = ?', [id], function (error) {
             if (error) throw error

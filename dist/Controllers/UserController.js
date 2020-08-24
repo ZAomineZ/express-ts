@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserController = void 0;
 const CharacterModel_1 = require("../Models/CharacterModel");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const moment_1 = __importDefault(require("moment"));
@@ -40,6 +41,13 @@ class UserController {
      */
     static forget(req, res) {
         res.render('admin/forget', { message: req.flash('success'), danger: req.flash('danger') });
+    }
+    /**
+     * @param {Request} req
+     * @param res
+     */
+    static delete(req, res) {
+        return User_1.User.delete(res, req);
     }
     /**
      * @param {Request} req
@@ -172,6 +180,8 @@ class UserController {
             res.render('admin/users/index', {
                 users: paginationData,
                 moment: moment_1.default,
+                message: req.flash('success'),
+                danger: req.flash('danger'),
                 pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
                 currentPage: pagination.currentPage ? pagination.currentPage : 1
             });

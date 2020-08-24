@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const DB_1 = require("../DB");
 const Password_1 = require("../Helpers/Password");
 const UserModel_1 = require("../Models/UserModel");
@@ -92,6 +93,27 @@ class User {
             sessionReq.user = user;
             res.end();
             return res.redirect('/admin');
+        });
+    }
+    /**
+     * @param {Response} response
+     * @param {Request} request
+     */
+    static delete(response, request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = request.params;
+            let user = yield (new UserModel_1.UserModel()).findByID(parseInt(params.id));
+            if (!user) {
+                return response.redirect('/admin/users');
+            }
+            return DB_1.DB.connect().query('DELETE FROM users WHERE id = ?', [params.id], function (error) {
+                if (error)
+                    throw error;
+                if (!error) {
+                    request.flash('success', `Vous avez supprimé ${user.username} avec succès !`);
+                    response.redirect('/admin/users');
+                }
+            });
         });
     }
     /**

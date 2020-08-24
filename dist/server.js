@@ -78,6 +78,7 @@ class Server {
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
         app.get('/admin/character/delete/:id', csrfProtection, CharacterController_1.CharacterController.delete);
         app.get('/admin/user/role/:id', UserController_1.UserController.updateRole);
+        app.get('/admin/user/delete/:id', csrfProtection, UserController_1.UserController.delete);
         // POST Routes
         // ROUTES CHARACTERS
         let upload = FileStorage_1.FileStorage.upload('characters/');

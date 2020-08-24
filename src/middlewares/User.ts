@@ -87,6 +87,27 @@ export class User {
     }
 
     /**
+     * @param {Response} response
+     * @param {Request} request
+     */
+    static async delete(response: Response, request: Request) {
+        const params = request.params
+
+        let user = await (new UserModel()).findByID(parseInt(params.id))
+        if (!user) {
+            return response.redirect('/admin/users')
+        }
+
+        return DB.connect().query('DELETE FROM users WHERE id = ?', [params.id], function (error) {
+            if (error) throw error
+            if (!error) {
+                request.flash('success', `Vous avez supprimé ${user.username} avec succès !`)
+                response.redirect('/admin/users')
+            }
+        })
+    }
+
+    /**
      *
      * @param {Response} res
      * @param {any} body

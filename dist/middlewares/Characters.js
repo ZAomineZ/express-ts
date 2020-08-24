@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Characters = void 0;
 const DB_1 = require("../DB");
 const moment_1 = __importDefault(require("moment"));
 const CategoryModel_1 = require("../Models/CategoryModel");
@@ -36,8 +37,8 @@ class Characters {
                 return res.redirect('/character/create');
             }
             let image = reqFile !== null ? reqFile.filename : null;
-            const data = [response.name, response.age, response.size, category.id, response.content, image, new Date()];
-            DB_1.DB.connect().query('INSERT INTO characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ?', data, function (error, results, fields) {
+            const data = [response.name, response.age, response.sexe, response.size, category.id, response.content, image, new Date()];
+            DB_1.DB.connect().query('INSERT INTO characters SET name = ?, age = ?, sexe = ?, size = ?, category = ?, content = ?, image = ?, created_at = ?', data, function (error, results, fields) {
                 if (error)
                     throw error;
                 if (!error) {
@@ -182,9 +183,9 @@ class Characters {
             if (!character) {
                 return response.redirect('/admin/characters');
             }
-            if (request.session && request.session.csrfSecret !== request.csrfToken()) {
-                return response.redirect('/');
-            }
+            // if (request.session && request.session.csrfSecret !== request.csrfToken()) {
+            //     return response.redirect('/')
+            // }
             return DB_1.DB.connect().query('DELETE FROM characters WHERE id = ?', [id], function (error) {
                 if (error)
                     throw error;
