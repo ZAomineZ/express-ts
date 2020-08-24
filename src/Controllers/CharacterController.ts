@@ -85,8 +85,26 @@ export class CharacterController {
     /**
      * @param {Request} req
      * @param {Response} res
+     *
+     * @return Promise<Query | void>
      */
-    static delete (req: Request, res: Response) {
+    static delete (req: Request, res: Response): Promise<Query | void> {
         return Characters.delete(res, req)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static filter (req: Request, res: Response) {
+        return Characters.filter(res, req)
+    }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static filterCategory (req: Request, res: Response) {
+        return Characters.filterCategory(res, req)
     }
 }

@@ -1,0 +1,36 @@
+<% if (categories) { %>
+    <div class="d-flex">
+        <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" id="filterGlobal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter
+            </button>
+            <div class="dropdown-menu" aria-labelledby="filterGlobal">
+                <button class="dropdown-item" type="button" id="name-filter">Name</button>
+                <button class="dropdown-item" type="button" id="age-filter">Age</button>
+                <button class="dropdown-item" type="button" id="size-filter">Taille</button>
+                <button class="dropdown-item" type="button" id="recent-filter">Le plus récent</button>
+            </div>
+        </div>
+        <div class="btn-group ml-3">
+            <button type="button" class="btn btn-primary dropdown-toggle" id="filterSexe" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter Sexe
+            </button>
+            <div class="dropdown-menu" aria-labelledby="filterSexe">
+                <button class="dropdown-item" type="button" id="man-filter">Homme</button>
+                <button class="dropdown-item" type="button" id="men-filter">Femme</button>
+            </div>
+        </div>
+        <div class="btn-group ml-3">
+            <button type="button" class="btn btn-info dropdown-toggle" id="filterCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter Category
+            </button>
+            <div class="dropdown-menu" aria-labelledby="filterCategory">
+                <% categories.forEach((category) => { %>
+                    <button class="dropdown-item" type="button" id="category-filter" data-id="<%= category.id %>">
+                        <%= category.name %>
+                    </button>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+<% } %>

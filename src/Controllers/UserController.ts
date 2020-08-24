@@ -39,8 +39,10 @@ export class UserController {
      */
     static logout(req: Request, res: Response) {
         if (req.cookies.user_sid && req.session && req.session.user) {
-            res.clearCookie('user_sid')
-            res.redirect('/')
+            req.session.destroy(function () {
+                res.clearCookie('user_sid')
+                res.redirect('/')
+            })
         } else {
             res.redirect('/login')
         }
@@ -124,6 +126,7 @@ export class UserController {
             characters: paginateData,
             moment,
             message: req.flash('success'),
+            danger: req.flash('danger'),
             pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
             currentPage: pagination.currentPage ? pagination.currentPage : 1
         })

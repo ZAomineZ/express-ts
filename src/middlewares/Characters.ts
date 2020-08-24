@@ -8,6 +8,7 @@ import {CharacterModel} from "../Models/CharacterModel";
 import paginate from 'express-paginate'
 import {Pagination} from "../Helpers/Pagination";
 import {CommentModel} from "../Models/CommentModel";
+import {CharacterHTML} from "../HTML/CharacterHTML";
 
 export class Characters {
     /**
@@ -46,8 +47,10 @@ export class Characters {
                 const pagination = new Pagination()
                 const paginateData = await pagination.paginate(request, results, CharacterModel)
 
+                const categories = await (new CategoryModel()).fetchAll()
                 return response.render('index.ejs', {
                     characters: paginateData,
+                    categories,
                     moment,
                     message: request.flash('success'),
                     pages: paginate.getArrayPages(request)(100, pagination.pageCount, pagination.currentPage),
@@ -72,6 +75,7 @@ export class Characters {
 
         return res.render('index.ejs', {
             characters: paginateData,
+            categories: null,
             moment,
             message: req.flash('success'),
             pages: paginate.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
@@ -132,13 +136,14 @@ export class Characters {
     static async update(response: any, params: ParamsDictionary, flash: CallableFunction, reqFile?: any, res: Response): Promise<Query | void> {
         let category = await (new CategoryModel()).findOrFail(response.category);
         if (!category) {
-            flash('danger', 'Aucune catégorie à était sélectionné ou n\'est pas dans notre base de donnée !')
+            //flash('danger', 'Aucune catégorie à était sélectionné ou n\'est pas dans notre base de donnée !')
             return res.redirect('/admin/character/update/' + params.id)
         }
+        const character = await (new CharacterModel()).findById(parseInt(params.id))
 
-        let image = reqFile !== null ? reqFile.filename : null;
-        const data = [response.name, response.age, response.size, category.id, response.content, image, new Date(), params.id];
-        return DB.connect().query('UPDATE characters SET name = ?, age = ?, size = ?, category = ?, content = ?, image = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
+        let image = reqFile ? reqFile.filename : character.image;
+        const data = [response.name, response.age, response.sexe, response.size, category.id, response.content, image, new Date(), params.id];
+        return DB.connect().query('UPDATE characters SET name = ?, age = ?, sexe = ?, size = ?, category = ?, content = ?, image = ?, created_at = ? WHERE id = ?', data, function (error, results, fields) {
             if (error) throw error;
             if (!error) {
                 return res.redirect('/')
@@ -150,13 +155,16 @@ export class Characters {
      * @param {Response} response
      * @param {Request} request
      *
-     * @return Promise<Query>
+     * @return Promise<Query | void>
      */
-    static async delete(response: Response, request: Request): Promise<Query> {
+    static async delete(response: Response, request: Request): Promise<Query | void> {
         const id = parseInt(request.params.id)
         let character = await (new CharacterModel()).findById(id)
         if (!character) {
-            response.redirect('/admin/characters')
+            return response.redirect('/admin/characters')
+        }
+        if (request.session && request.session.csrfSecret !== request.csrfToken()) {
+            return response.redirect('/')
         }
 
         return DB.connect().query('DELETE FROM characters WHERE id = ?', [id], function (error) {
@@ -166,5 +174,32 @@ export class Characters {
                 response.redirect('/admin/characters')
             }
         })
+    }
+
+    /**
+     * @param {Response} response
+     * @param {Request} request
+     * @param {boolean} category
+     *
+     * @return Promise<Response>
+     */
+    static async filter(response: Response, request: Request, category: boolean = false): Promise<Response> {
+        const params = request.params
+        let filterName = !category ? params.name : params.id
+
+        let characters = !category ? await (new CharacterModel()).filter(filterName) : await (new CharacterModel()).filterCategory(filterName)
+        characters = CharacterHTML.setCharacter(characters)
+        return response.json({
+            success: true,
+            characters
+        })
+    }
+
+    /**
+     * @param {Response} response
+     * @param {Request} request
+     */
+    static async filterCategory(response: Response, request: Request) {
+        return Characters.filter(response, request, true)
     }
 }

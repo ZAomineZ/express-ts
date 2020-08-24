@@ -11,6 +11,7 @@ const express_session_1 = __importDefault(require("express-session"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
 const express_paginate_1 = __importDefault(require("express-paginate"));
+const csurf_1 = __importDefault(require("csurf"));
 // Modules Middlewares and Controllers
 const FileStorage_1 = require("./Storage/FileStorage");
 const CharacterController_1 = require("./Controllers/CharacterController");
@@ -42,12 +43,13 @@ class Server {
             resave: true,
             saveUninitialized: true,
             cookie: {
-                // @ts-ignore
-                expires: 24 * 60 * 60 * 1000
+                maxAge: 600000
             }
         }));
         app.use(connect_flash_1.default());
         app.use(express_paginate_1.default.middleware(10, 50));
+        // COOKIE CSRF
+        let csrfProtection = csurf_1.default();
         app.use(cookie_parser_1.default());
         // Middlewares Cookies and Sessions
         app.use(Auth_1.Auth.checkSessionAuth);
@@ -74,7 +76,7 @@ class Server {
         app.get('/admin/category/create', Auth_1.Auth.checkRoleAdmin, CategoryController_1.CategoryController.create);
         app.get('/admin/character/update/:id', CharacterController_1.CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController_1.CategoryController.edit);
-        app.get('/admin/character/delete/:id', CharacterController_1.CharacterController.delete);
+        app.get('/admin/character/delete/:id', csrfProtection, CharacterController_1.CharacterController.delete);
         app.get('/admin/user/role/:id', UserController_1.UserController.updateRole);
         // POST Routes
         // ROUTES CHARACTERS
@@ -94,6 +96,9 @@ class Server {
         app.post('/admin/register', UserController_1.UserController.registerPOST);
         app.post('/admin/login', UserController_1.UserController.loginPOST);
         app.post('/admin/forget', UserController_1.UserController.forgetPOST);
+        // ROUTES API FILTER
+        app.post('/api/character/filter/:name', CharacterController_1.CharacterController.filter);
+        app.post('/api/character/filterCategory/:id', CharacterController_1.CharacterController.filterCategory);
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès');
         });

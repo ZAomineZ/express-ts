@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
 const CharacterModel_1 = require("../Models/CharacterModel");
 const CategoryModel_1 = require("../Models/CategoryModel");
 const moment_1 = __importDefault(require("moment"));
@@ -48,8 +47,10 @@ class UserController {
      */
     static logout(req, res) {
         if (req.cookies.user_sid && req.session && req.session.user) {
-            res.clearCookie('user_sid');
-            res.redirect('/');
+            req.session.destroy(function () {
+                res.clearCookie('user_sid');
+                res.redirect('/');
+            });
         }
         else {
             res.redirect('/login');
@@ -132,6 +133,7 @@ class UserController {
                 characters: paginateData,
                 moment: moment_1.default,
                 message: req.flash('success'),
+                danger: req.flash('danger'),
                 pages: express_paginate_1.default.getArrayPages(req)(100, pagination.pageCount, pagination.currentPage),
                 currentPage: pagination.currentPage ? pagination.currentPage : 1
             });

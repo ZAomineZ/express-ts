@@ -13,12 +13,10 @@
                 <img src="/assets/img/characters/<%= character.image %>" alt="Image Personnage" class="card-img-top"/>
                 <div class="card-body">
                     <p>Age : <%= character.age %> ans</p>
+                    <p>Sexe : <%= character.sexe %> </p>
                     <p>Taille (cm) : <%= character.size %> cm</p>
                     <p>Manga : <%= character.category === null ? 'Aucune Catégorie' : Category.name %></p>
                     <p>Date de création : <%= moment(character.created_at).format('MMMM Do YYYY') %></p>
-                    <p class="pt-2">
-                        <a href="/character/update/<%= character.id %>" class="btn btn-success">Modifier</a>
-                    </p>
                 </div>
             </div>
         </div>

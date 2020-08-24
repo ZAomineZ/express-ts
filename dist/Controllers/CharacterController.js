@@ -88,9 +88,25 @@ class CharacterController {
     /**
      * @param {Request} req
      * @param {Response} res
+     *
+     * @return Promise<Query | void>
      */
     static delete(req, res) {
         return Characters_1.Characters.delete(res, req);
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static filter(req, res) {
+        return Characters_1.Characters.filter(res, req);
+    }
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
+    static filterCategory(req, res) {
+        return Characters_1.Characters.filterCategory(res, req);
     }
 }
 exports.CharacterController = CharacterController;

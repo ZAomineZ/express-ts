@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const DB_1 = require("../DB");
+const TextHelper_1 = require("../Helpers/TextHelper");
 class CharacterModel {
     /**
      * @return Promise<any>
@@ -153,6 +154,56 @@ class CharacterModel {
                 }
                 query += ' LIMIT ? OFFSET ?';
                 DB_1.DB.connect().query(query, data, function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {string|null} filterName
+     *
+     * @return Promise<any>
+     */
+    filter(filterName) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let typeOrderBy = 'ASC';
+            if (filterName === 'created_at') {
+                typeOrderBy = 'DESC';
+            }
+            let promise = new Promise((resolve, reject) => {
+                let data = [];
+                let query = 'SELECT * FROM characters ORDER BY ' + filterName + ' ' + typeOrderBy;
+                if (filterName === 'homme' || filterName === 'femme') {
+                    filterName = TextHelper_1.TextHelper.UCFirst(filterName)[0];
+                    data.push(filterName);
+                    query = 'SELECT * FROM characters WHERE sexe = ?';
+                }
+                DB_1.DB.connect().query(query, data, function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {string|number|null} filterID
+     *
+     * @return Promise<any>
+     */
+    filterCategory(filterID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM characters WHERE category = ?';
+                DB_1.DB.connect().query(query, [filterID], function (error, results) {
                     if (error)
                         throw error;
                     if (!error) {

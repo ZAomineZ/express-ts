@@ -8,7 +8,9 @@
             <input type="text" id="search" name="search" placeholder="search...." class="form-control">
         </div>
     </form>
-    <div class="row pt-5">
+    <!-- Filter Characters Component -->
+    <%- include character/filter.ejs %>
+    <div class="row pt-5" id="characters-list">
         <% characters.forEach(function (character) { %>
             <%- include character/character.ejs %>
         <% }); %>
@@ -16,4 +18,5 @@
     <%- include ./pagination.ejs %>
 </div>
 
+<script src="/front/FilterCharacterFront.js" lang="js"></script>
 <%- include common/footer.ejs %>

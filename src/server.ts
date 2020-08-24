@@ -7,6 +7,7 @@ import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import flash from 'connect-flash'
 import paginate from 'express-paginate'
+import csrf from 'csurf'
 
 // Modules Middlewares and Controllers
 import {FileStorage} from "./Storage/FileStorage";
@@ -46,12 +47,14 @@ export default class Server {
             resave: true,
             saveUninitialized: true,
             cookie: {
-                // @ts-ignore
-                expires: 24 * 60 * 60 * 1000
+                maxAge: 600000
             }
         }))
         app.use(flash())
         app.use(paginate.middleware(10, 50));
+
+        // COOKIE CSRF
+        let csrfProtection = csrf()
         app.use(cookieParser())
 
         // Middlewares Cookies and Sessions
@@ -86,7 +89,7 @@ export default class Server {
 
         app.get('/admin/character/update/:id', CharacterController.edit);
         app.get('/admin/category/update/:id', CategoryController.edit)
-        app.get('/admin/character/delete/:id', CharacterController.delete);
+        app.get('/admin/character/delete/:id', csrfProtection, CharacterController.delete);
         app.get('/admin/user/role/:id', UserController.updateRole)
 
         // POST Routes
@@ -111,6 +114,10 @@ export default class Server {
         app.post('/admin/register', UserController.registerPOST)
         app.post('/admin/login', UserController.loginPOST)
         app.post('/admin/forget', UserController.forgetPOST)
+
+        // ROUTES API FILTER
+        app.post('/api/character/filter/:name', CharacterController.filter)
+        app.post('/api/character/filterCategory/:id', CharacterController.filterCategory)
 
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès')
