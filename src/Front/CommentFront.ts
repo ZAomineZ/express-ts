@@ -4,14 +4,12 @@ class CommentFront {
     private content: HTMLTextAreaElement | null;
     private form: HTMLFontElement | null;
     private inputCharacter: HTMLInputElement | null;
-    private replyComments: HTMLDivElement | null;
 
     constructor() {
         this.btnReply = document.querySelectorAll('#btn-reply')
         this.content = document.querySelector('#content')
         this.form = document.querySelector('#form-commentFront')
         this.inputCharacter = document.querySelector('#characterID')
-        this.replyComments = document.querySelector('#reply')
     }
 
     public init() {
@@ -57,39 +55,12 @@ class CommentFront {
             }
         })
         if (response.data.success) {
-            const lastComment = response.data.lastComment[0]
+            const lastComment = response.data.lastComment
+            const commentReplies = document.querySelector('#comment-replies-' + commentID)
             // @ts-ignore
-            this.replyComments?.innerHTML += this.commentReply(lastComment, moment)
-        }
-    }
-
-    /**
-     * @param {object|null} comment
-     * @param {object|null} moment
-     * @private
-     */
-    private commentReply(comment?: { id: number | null, nameUser?: string | null, dateComment?: object | null, content?: string | null }, moment?: object) {
-        if (comment) {
-            return (`
-            <div id="reply-${comment.id}" class="pl-5">
-                <div class="comment">
-                    <div class="comment-header">
-                        <img class="avatar" src="https://www.gravatar.com/avatar/af00fe52b1b759393f4d43c641e8bf91"
-                             alt="Image Gravatar">
-                        <h1>${comment.nameUser ? comment.nameUser : null} dit –</h1>
-                        <span>
-                            ${comment.dateComment}
-                        </span>
-                    </div>
-                    <p></p>
-                    <p>
-                        ${comment.content}
-                    </p>
-                    <p></p>
-                <button class="btn btn-secondary" id="btn-reply" data-comment-id="<%= commentFront.id %>">💬 Répondre</button>
-             </div>
-            </div>
-        `)
+            commentReplies.innerHTML += lastComment
+            // @ts-ignore
+            this.content?.value = ''
         }
     }
 }

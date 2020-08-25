@@ -3,6 +3,7 @@ import {DB} from "../DB";
 import {Auth} from "./Auth";
 import {Query} from "mysql";
 import {CommentModel} from "../Models/CommentModel";
+import {CommentHTML} from "../HTML/CommentHTML";
 
 export class Comment {
 
@@ -53,7 +54,8 @@ export class Comment {
         return DB.connect().query('INSERT INTO comments SET content = ?, user_id = ?, character_id = ?, reply_id = ?, created_at = ?', data, async function (error) {
             if (error) throw error
             if (!error) {
-                const lastComment = await (new CommentModel()).findLastComment(userID)
+                let lastComment = await (new CommentModel()).findLastComment(userID)
+                lastComment = CommentHTML.commentReply(lastComment[0])
                 res.json({
                     success: true,
                     lastComment

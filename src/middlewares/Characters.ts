@@ -90,7 +90,7 @@ export class Characters {
      * @return {Query}
      */
     static async show(request: Request, response: Response): Promise<Query> {
-        let id = request.params.id;
+        let id = parseInt(request.params.id);
         return DB.connect().query('SELECT * FROM characters WHERE id = ?', [id], async function (error, results, fields) {
             if (error) throw error;
             if (!error) {
@@ -102,7 +102,9 @@ export class Characters {
                 Comments = commentModel.commentsWithReply(Comments)
 
                 const characters = await (new CharacterModel()).findSimilar(3, Category, id)
-                return response.render('character/show', {character, characters, Comments, moment, Category})
+                const message = request.flash('message')
+                const danger = request.flash('danger')
+                return response.render('character/show', {character, characters, Comments, moment, Category, message, danger})
             }
         })
     }

@@ -1,6 +1,8 @@
 <%- include ../common/header.ejs %>
 
 <div class="container pt-5">
+    <% include ../flash.ejs %>
+
     <h1>Personnage : <%= character.name %></h1>
     <div class="row">
         <div class="col-md-6">
@@ -26,7 +28,7 @@
         <!-- COMPONENT COMMENTS -->
         <% Comments.forEach(function (commentFront) { %>
             <%- include ./comment.ejs %>
-            <div id="reply">
+            <div id="comment-replies-<%= commentFront.id %>">
                 <% if (commentFront.reply) { %>
                     <% commentFront.reply.forEach(function (reply) { %>
                         <div id="reply-<%= reply.id %>" class="pl-5">
