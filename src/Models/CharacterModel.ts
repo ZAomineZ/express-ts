@@ -2,7 +2,6 @@ import {DB} from "../DB";
 import {TextHelper} from "../Helpers/TextHelper";
 
 export class CharacterModel {
-
     /**
      * @return Promise<any>
      */
@@ -27,6 +26,75 @@ export class CharacterModel {
         let promise = new Promise((resolve: any, reject: any) => {
             const query = "SELECT * FROM characters WHERE name LIKE ?";
             DB.connect().query(query, [querySearch], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
+     * @param {string|null} age
+     *
+     * @return Promise<any>
+     */
+    async findByAge(age?: string): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = "SELECT * FROM characters WHERE age = ?";
+            DB.connect().query(query, [age], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
+     * @param {string|null} type
+     */
+    async findBySexe(type?: string) {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = "SELECT * FROM characters WHERE sexe = ?";
+            DB.connect().query(query, [type], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
+     * @param {number|null} size
+     */
+    async findBySize(size?: string) {
+        let promise = new Promise((resolve: any, reject: any) => {
+            const query = "SELECT * FROM characters WHERE size = ?";
+            DB.connect().query(query, [size], function (error, results) {
+                if (error) throw error;
+                if (!error) {
+                    resolve(results)
+                }
+            });
+        });
+        return promise.then((result: any) => result)
+    }
+
+    /**
+     * @param {string|null} field
+     * @param {string|null} order
+     *
+     * @return Promise<any>
+     */
+    async findByOrder(field?: string, order?: string): Promise<any> {
+        let promise = new Promise((resolve: any, reject: any) => {
+            let query = `SELECT * FROM characters ORDER BY ${field} ${order}`;
+            DB.connect().query(query, function (error, results) {
                 if (error) throw error;
                 if (!error) {
                     resolve(results)

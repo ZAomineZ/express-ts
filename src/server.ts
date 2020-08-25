@@ -16,6 +16,7 @@ import {CategoryController} from "./Controllers/CategoryController";
 import {UserController} from "./Controllers/UserController";
 import {Auth} from "./middlewares/Auth";
 import {CommentController} from "./Controllers/CommentController";
+import {API} from "./Routes/API";
 
 export default class Server {
     readonly port: number = 8080;
@@ -119,6 +120,9 @@ export default class Server {
         // ROUTES API FILTER
         app.post('/api/character/filter/:name', CharacterController.filter)
         app.post('/api/character/filterCategory/:id', CharacterController.filterCategory)
+
+        // ROUTES API REST
+        API.charactersAPI(app)
 
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès')

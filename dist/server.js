@@ -19,6 +19,7 @@ const CategoryController_1 = require("./Controllers/CategoryController");
 const UserController_1 = require("./Controllers/UserController");
 const Auth_1 = require("./middlewares/Auth");
 const CommentController_1 = require("./Controllers/CommentController");
+const API_1 = require("./Routes/API");
 class Server {
     constructor(port) {
         this.port = 8080;
@@ -100,6 +101,8 @@ class Server {
         // ROUTES API FILTER
         app.post('/api/character/filter/:name', CharacterController_1.CharacterController.filter);
         app.post('/api/character/filterCategory/:id', CharacterController_1.CharacterController.filterCategory);
+        // ROUTES API REST
+        API_1.API.charactersAPI(app);
         app.listen(this.port, function () {
             console.log('Le serveur a démarré avec succès');
         });

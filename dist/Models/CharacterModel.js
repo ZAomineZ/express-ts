@@ -50,6 +50,83 @@ class CharacterModel {
         });
     }
     /**
+     * @param {string|null} age
+     *
+     * @return Promise<any>
+     */
+    findByAge(age) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = "SELECT * FROM characters WHERE age = ?";
+                DB_1.DB.connect().query(query, [age], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {string|null} type
+     */
+    findBySexe(type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = "SELECT * FROM characters WHERE sexe = ?";
+                DB_1.DB.connect().query(query, [type], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {number|null} size
+     */
+    findBySize(size) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                const query = "SELECT * FROM characters WHERE size = ?";
+                DB_1.DB.connect().query(query, [size], function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
+     * @param {string|null} field
+     * @param {string|null} order
+     *
+     * @return Promise<any>
+     */
+    findByOrder(field, order) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let promise = new Promise((resolve, reject) => {
+                let query = `SELECT * FROM characters ORDER BY ${field} ${order}`;
+                DB_1.DB.connect().query(query, function (error, results) {
+                    if (error)
+                        throw error;
+                    if (!error) {
+                        resolve(results);
+                    }
+                });
+            });
+            return promise.then((result) => result);
+        });
+    }
+    /**
      * @param {number} categoryID
      *
      * @return Promise<any>
